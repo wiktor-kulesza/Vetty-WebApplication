@@ -33,9 +33,9 @@ public abstract class Pet {
     @JoinColumn(name = "breed_id")
     private Breed breed;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] image;
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

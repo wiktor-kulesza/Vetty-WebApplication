@@ -7,6 +7,7 @@ import com.example.entity.Dog;
 import com.example.entity.Pet;
 import com.example.exception.PetToDtoConvertionException;
 import com.example.service.BreedService;
+import com.example.service.ImageService;
 import com.example.service.PetService;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class PetController {
     private final BreedService breedService;
 
     private final UserService userService;
+
+    private final ImageService imageService;
 
     private final ModelMapper modelMapper;
 
@@ -101,7 +104,7 @@ public class PetController {
         return petDto;
     }
 
-    private Pet convertToEntity(PetDto petDto) throws IOException {
+    private Pet convertToEntity(PetDto petDto) {
         // TODO: add image adding and validation
         if (!breedService.validateBreed(petDto.getBreedName()) || !userService.validateUser(petDto.getOwnerId()))
             throw new IllegalArgumentException("Invalid arguments (breed or user)");
@@ -122,8 +125,8 @@ public class PetController {
                     .build();
         else
             throw new IllegalArgumentException("Species is not a dog or a cat");
-        if (petDto.getImage() != null)
-            pet.setImage(petDto.getImage().getBytes());
+        if (petDto.getImageId() != null)
+            pet.setImage(imageService.getImageById(petDto.getImageId()));
         return pet;
     }
 }
