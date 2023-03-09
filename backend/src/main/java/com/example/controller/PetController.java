@@ -15,8 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,7 +70,7 @@ public class PetController {
 
     @CrossOrigin
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Pet> modifyPet(@PathVariable Integer id, @RequestBody PetDto petDto) throws IOException {
+    public ResponseEntity<Pet> modifyPet(@PathVariable Integer id, @RequestBody PetDto petDto) {
         if (!Objects.equals(id, petDto.getId())) {
             throw new IllegalArgumentException("IDs don't match");
         }
@@ -87,14 +87,17 @@ public class PetController {
 
     @CrossOrigin
     @PostMapping
-    public ResponseEntity<Pet> addPet(@RequestBody PetDto petDto) throws IOException {
+    public ResponseEntity<Pet> addPet(@RequestBody PetDto petDto) {
         Pet pet = convertToEntity(petDto);
         return ResponseEntity.ok(petService.addPet(pet));
     }
 
     private PetDto convertToDto(Pet pet) throws PetToDtoConvertionException {
         PetDto petDto = modelMapper.map(pet, PetDto.class);
-        petDto.setOwnerId(pet.getOwner().getId());
+        if (pet.getImage() != null && pet.getImage().getImage() != null) {
+            petDto.getImage().setImageBase64(Base64.getEncoder().encodeToString(petDto.getImage().getImage()));
+            petDto.getImage().setImage(null);
+        }
         if (pet instanceof Dog)
             petDto.setSpecies(PetConstants.DOG);
         else if (pet instanceof Cat)
@@ -103,6 +106,7 @@ public class PetController {
             throw new PetToDtoConvertionException("Pet is not a dog or a cat");
         return petDto;
     }
+
 
     private Pet convertToEntity(PetDto petDto) {
         // TODO: add image adding and validation

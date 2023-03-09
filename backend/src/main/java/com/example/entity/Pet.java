@@ -27,6 +27,8 @@ public abstract class Pet {
     @Column(nullable = false)
     private String name;
 
+    //TODO: add sex
+
     private Date birthDate;
 
     @ManyToOne

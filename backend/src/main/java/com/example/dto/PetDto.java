@@ -22,4 +22,6 @@ public class PetDto {
 
     private Integer ownerId;
 
+    private ImageDto image;
+
 }
