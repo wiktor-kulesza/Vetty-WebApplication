@@ -41,4 +41,8 @@ public class PetService {
         }
 
     }
+
+    public List<Pet> getAllPetsByUserEmail(String email) {
+        return petRepository.findAllByOwnerEmail(email);
+    }
 }

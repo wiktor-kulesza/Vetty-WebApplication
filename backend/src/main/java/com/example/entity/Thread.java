@@ -23,10 +23,10 @@ public class Thread {
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "medicalHistory_id")
+    @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "thread")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "thread")
     private List<Comment> comments = new java.util.ArrayList<>();
 
 }

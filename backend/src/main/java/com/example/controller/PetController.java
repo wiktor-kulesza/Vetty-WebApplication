@@ -49,9 +49,9 @@ public class PetController {
     }
 
     @CrossOrigin
-    @GetMapping(path = "/user/{id}")
-    public ResponseEntity<List<PetDto>> getAllPetsByUserId(@PathVariable Integer id) throws PetToDtoConvertionException {
-        List<Pet> pets = petService.getAllPetsByUserId(id);
+    @GetMapping(path = "/user/{email}")
+    public ResponseEntity<List<PetDto>> getAllPetsByUserId(@PathVariable String email) throws PetToDtoConvertionException {
+        List<Pet> pets = petService.getAllPetsByUserEmail(email);
         List<PetDto> petsDto = new ArrayList<>();
         for (Pet pet : pets) {
             PetDto petDto = convertToDto(pet);

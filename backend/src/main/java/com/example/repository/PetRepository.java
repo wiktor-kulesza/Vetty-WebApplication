@@ -12,4 +12,5 @@ public interface PetRepository extends JpaRepository<Pet, Integer> {
 
     List<Pet> getAllByOwnerId(Integer id);
 
+    List<Pet> findAllByOwnerEmail(String email);
 }

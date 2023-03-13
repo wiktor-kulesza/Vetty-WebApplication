@@ -20,9 +20,6 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(nullable = false)
-    private String login;
-
     @JsonIgnore
     @Column(nullable = false)
     private String password;
@@ -36,4 +33,8 @@ public class User {
 
     @OneToMany(mappedBy = "author")
     private List<Thread> threads;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<UserRole> roles;
+
 }
