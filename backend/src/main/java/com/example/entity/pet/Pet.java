@@ -1,5 +1,10 @@
-package com.example.entity;
+package com.example.entity.pet;
 
+import com.example.entity.Breed;
+import com.example.entity.Image;
+import com.example.entity.MedicalHistory.MedicalHistory;
+import com.example.entity.Sex;
+import com.example.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +33,8 @@ public abstract class Pet {
     private String name;
 
     //TODO: add sex
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
 
     private Date birthDate;
 
