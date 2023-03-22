@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.entity.pet.Pet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;

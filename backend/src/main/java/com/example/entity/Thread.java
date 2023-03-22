@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.entity.MedicalHistory.MedicalHistory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
