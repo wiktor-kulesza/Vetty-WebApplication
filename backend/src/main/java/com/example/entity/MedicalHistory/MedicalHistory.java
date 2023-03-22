@@ -1,5 +1,7 @@
-package com.example.entity;
+package com.example.entity.MedicalHistory;
 
+import com.example.entity.Thread;
+import com.example.entity.pet.Pet;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -25,8 +27,12 @@ public class MedicalHistory {
 
     private Date date;
 
+    private String description;
+
+    private String diagnosis;
+
     @OneToMany(mappedBy = "medicalHistory", fetch = FetchType.LAZY)
-    private List<Results> results;
+    private List<Results> bloodResults;
 
     @OneToMany(mappedBy = "medicalHistory", fetch = FetchType.LAZY)
     private List<Thread> threads;

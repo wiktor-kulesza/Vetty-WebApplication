@@ -1,10 +1,11 @@
-package com.example.entity;
+package com.example.entity.MedicalHistory;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,6 +19,8 @@ public class Results {
     private Integer id;
 
     //TODO: ADD proper stucture for results
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "results")
+    private List<BloodFactor> factors;
 
     @ManyToOne
     @JoinColumn(name = "medical_history_id")
