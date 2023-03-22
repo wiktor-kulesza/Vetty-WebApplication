@@ -46,11 +46,15 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public boolean validateUser(Integer ownerId) {
-        return userRepository.existsById(ownerId);
+    public boolean validateUser(String ownerEmail) {
+        return userRepository.existsByEmail(ownerEmail);
     }
 
     public void delete(String email) {
         userRepository.deleteByEmail(email);
+    }
+
+    public Optional<User> getUserByEmail(String ownerEmail) {
+        return userRepository.findByEmail(ownerEmail);
     }
 }
