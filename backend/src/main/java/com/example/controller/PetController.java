@@ -2,9 +2,11 @@ package com.example.controller;
 
 import com.example.constants.PetConstants;
 import com.example.dto.PetDto;
-import com.example.entity.Cat;
-import com.example.entity.Dog;
-import com.example.entity.Pet;
+import com.example.entity.Sex;
+import com.example.entity.pet.Cat;
+import com.example.entity.pet.Dog;
+import com.example.entity.pet.Pet;
+import com.example.entity.pet.SpeciesPetFactory;
 import com.example.exception.PetToDtoConvertionException;
 import com.example.service.BreedService;
 import com.example.service.ImageService;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 
 
 @RestController
@@ -36,6 +38,8 @@ public class PetController {
     private final ImageService imageService;
 
     private final ModelMapper modelMapper;
+
+    private final SpeciesPetFactory petFactory = new SpeciesPetFactory();
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<PetDto>> getAllPets() throws PetToDtoConvertionException {
@@ -71,17 +75,12 @@ public class PetController {
     @CrossOrigin
     @PutMapping(value = "/{id}")
     public ResponseEntity<Pet> modifyPet(@PathVariable Integer id, @RequestBody PetDto petDto) {
-        if (!Objects.equals(id, petDto.getId())) {
-            throw new IllegalArgumentException("IDs don't match");
-        }
-        Pet pet = convertToEntity(petDto);
-        pet.setId(id);
-        return ResponseEntity.ok(petService.addPet(pet));
+        return ResponseEntity.ok(petService.modifyPet(id, petDto));
     }
 
     @CrossOrigin
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Pet> deletePet(@PathVariable Integer id) {
+    public ResponseEntity<Integer> deletePet(@PathVariable Integer id) {
         return ResponseEntity.ok(petService.removePet(id));
     }
 
@@ -109,28 +108,18 @@ public class PetController {
 
 
     private Pet convertToEntity(PetDto petDto) {
-        // TODO: add image adding and validation
-        if (!breedService.validateBreed(petDto.getBreedName()) || !userService.validateUser(petDto.getOwnerId()))
+        // TODO: add image validation and refactor with abstract factory pattern
+        if (!breedService.validateBreed(petDto.getBreedName()) || !userService.validateUser(petDto.getOwnerEmail()))
             throw new IllegalArgumentException("Invalid arguments (breed or user)");
-        Pet pet;
-        if (petDto.getSpecies().equalsIgnoreCase(PetConstants.DOG)) {
-            pet = Dog.builder()
-                    .name(petDto.getName())
-                    .birthDate(petDto.getBirthDate())
-                    .breed(breedService.getBreedByName(petDto.getBreedName()))
-                    .owner(userService.getUserById(petDto.getOwnerId()).orElse(null))
-                    .build();
-        } else if (petDto.getSpecies().equalsIgnoreCase(PetConstants.CAT))
-            pet = Cat.builder()
-                    .name(petDto.getName())
-                    .birthDate(petDto.getBirthDate())
-                    .breed(breedService.getBreedByName(petDto.getBreedName()))
-                    .owner(userService.getUserById(petDto.getOwnerId()).orElse(null))
-                    .build();
-        else
-            throw new IllegalArgumentException("Species is not a dog or a cat");
+        Pet pet = petFactory.createPet(petDto.getSpecies());
+        pet.setName(petDto.getName());
+        pet.setSex(Sex.valueOf(petDto.getSex().toUpperCase(Locale.ROOT)));
+        pet.setBirthDate(petDto.getBirthDate());
+        pet.setBreed(breedService.getBreedByName(petDto.getBreedName()));
+        pet.setOwner(userService.getUserByEmail(petDto.getOwnerEmail()).orElse(null));
         if (petDto.getImageId() != null)
             pet.setImage(imageService.getImageById(petDto.getImageId()));
         return pet;
     }
+
 }
