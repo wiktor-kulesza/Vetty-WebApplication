@@ -1,10 +1,18 @@
 import {useForm} from 'react-hook-form';
-import useFetch from './use_fetch';
 import * as constants from './constants';
 import {useEffect, useState} from 'react';
+import useFetch from './proccess_data/use_fetch';
+import {useNavigate} from 'react-router-dom';
+import ValidateImage from './data_validation/validateImage';
 
 const AddPetForm = () => {
+    const navigate = useNavigate();
     const [token, setToken] = useState(localStorage.getItem('token'));
+    const [sex, setSex] = useState('MALE');
+
+    const handleSexChange = (event) => {
+        setSex(event.target.value);
+    };
 
     useEffect(() => {
         const tokenFromLocalStorage = localStorage.getItem('token');
@@ -20,25 +28,6 @@ const AddPetForm = () => {
         formState: {errors},
     } = useForm();
 
-    const validateImage = (value) => {
-        if (!value[0]) {
-            return true;
-        }
-        const image = value[0];
-        const imageSize = image.size / 1024 / 1024; // in MB
-        const allowedTypes = ["image/jpeg", "image/png"];
-        const isAllowedType = allowedTypes.includes(image.type);
-        const isAllowedSize = imageSize <= 10;
-
-        if (!isAllowedType) {
-            return "Only JPG or PNG image types are allowed";
-        }
-        if (!isAllowedSize) {
-            return "Image size should be less than 10MB";
-        }
-        return true;
-    };
-
     const postPet = (imageId, data) => {
         fetch(constants.URL + constants.API_ADD_PET, {
             method: 'POST',
@@ -49,14 +38,16 @@ const AddPetForm = () => {
             body: JSON.stringify({
                 species: data.species,
                 name: data.name,
+                sex: sex,
                 breedName: data.breedName,
                 birthDate: data.birthDate,
-                ownerId: 1,
+                ownerEmail: localStorage.getItem('userEmail'),
                 imageId: imageId
             })
         })
             .then(response => {
                 console.log(response);
+                navigate(constants.HOME);
             })
             .catch(error => {
                 console.log(error);
@@ -65,29 +56,34 @@ const AddPetForm = () => {
 
     const onSubmit = (data) => {
         console.log(data.image)
-        if (data.image[0] && data.image[0] !== undefined) {
-            const blob = new Blob([data.image[0]], {type: "image/jpeg"});
-            console.log("BLOB")
-            console.log(blob);
-            const formData = new FormData();
-            formData.append("image", blob);
-            console.log("imgage post")
-            console.log(token);
-            fetch(constants.URL + constants.API_ADD_IMAGE, {
-                Authorization: `Bearer ${token}`,
-                method: "POST",
-                body: formData,
-            })
-                .then((response) => response.json())
-                .then((imageId) => {
-                    postPet(imageId, data);
+        if (window.confirm("Are you sure you want to add pet?")) {
+            if (data.image[0] && data.image[0] !== undefined) {
+                const blob = new Blob([data.image[0]], {type: "image/jpeg"});
+                console.log("BLOB")
+                console.log(blob);
+                const formData = new FormData();
+                formData.append("image", blob);
+                console.log("imgage post")
+                console.log(token);
+                fetch(constants.URL + constants.API_ADD_IMAGE, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    method: "POST",
+                    body: formData,
                 })
-                .catch(error => {
-                    console.log(error);
-                });
-        } else {
-            postPet(null, data);
+                    .then((response) => response.json())
+                    .then((imageId) => {
+                        postPet(imageId, data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                postPet(null, data);
+            }
         }
+
     };
 
     return (
@@ -95,13 +91,34 @@ const AddPetForm = () => {
             <div className='form-div'>
                 <label htmlFor="species">Species:</label>
                 <label>
-                    Species:
                     <select {...register('species', {required: true})}>
                         <option value="">Select a species</option>
                         <option value="Dog">Dog</option>
                         <option value="Cat">Cat</option>
                     </select>
                     {errors.breed && <span> <br/> This field is required</span>}
+                </label>
+            </div>
+            <div className='form-div'>
+                <label>
+                    <input
+                        type="radio"
+                        name="sex"
+                        value="MALE"
+                        checked={sex === 'MALE'}
+                        onChange={handleSexChange}
+                    />
+                    Male
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        name="sex"
+                        value="FEMALE"
+                        checked={sex === 'FEMALE'}
+                        onChange={handleSexChange}
+                    />
+                    Female
                 </label>
             </div>
             <div className='form-div'>
@@ -136,7 +153,7 @@ const AddPetForm = () => {
                     id="image"
                     accept="image/*"
                     {...register('image', {
-                        validate: validateImage,
+                        validate: ValidateImage,
                     })}
                 />
                 {errors.image?.types?.maxSize && <p>Image is too big (maximum size is 10MB)</p>}

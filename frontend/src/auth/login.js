@@ -18,6 +18,16 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+
+        function handleGoBack() {
+            // If the previous page is the same as the current page,
+            // navigate to the default page instead
+            const defaultPath = constants.LOGIN;
+            const previousPath = window.location.pathname;
+            const currentPath = (previousPath === defaultPath) ? constants.HOME : previousPath;
+            navigate(currentPath);
+        }
+
         try {
             // const hashedPassword = bcrypt.hashSync(password)
             await axios.post(constants.URL + constants.API_LOGIN, {}, {params: {email: email, password: password}})
@@ -27,13 +37,9 @@ const Login = () => {
                     const decoded = jwt(token);
                     localStorage.setItem('token', token);
                     localStorage.setItem('userEmail', decoded.sub);
-                    console.log(decoded);
-                    console.log(localStorage.getItem('token'));
-                    console.log(localStorage.getItem('userEmail'));
                 })
 
-
-            navigate(-1);
+            handleGoBack();
         } catch (error) {
             console.error(error);
         }

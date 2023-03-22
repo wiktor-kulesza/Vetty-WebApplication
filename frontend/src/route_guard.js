@@ -8,10 +8,6 @@ const RouteGuard = () => {
 
         //check user has JWT token
         localStorage.getItem("token") ? flag = true : flag = false
-
-        console.log("FLAAG")
-        console.log(flag)
-
         return flag;
     }
 

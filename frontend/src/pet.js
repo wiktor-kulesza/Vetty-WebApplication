@@ -3,7 +3,7 @@ import PetMedicalHistoryList from "./petMedicalHistoryList";
 import * as constants from "./constants";
 import {Link, useParams} from "react-router-dom";
 import Image from "./assets/default-pet-image.jpg";
-import useFetch from "./use_fetch";
+import useFetch from './proccess_data/use_fetch';
 
 const Pet = () => {
     const {id} = useParams();
@@ -36,10 +36,12 @@ const Pet = () => {
                           src={petData.image && petData.image.imageBase64 ? `data:image/jpeg;base64,${(petData.image.imageBase64)}` : Image}
                           alt={petData.name}/>}
                     {petData.species && <p> {petData.species}</p>}
+                    {petData.sex && <p> {petData.sex}</p>}
                     {petData.name && <p> Name: {petData.name}</p>}
                     {petData.breed && <p>Breed: {petData.breed.name}</p>}
                     {petData.birthDate && <p>Birth date: {petData.birthDate}</p>}
                     {petData.medicalHistories && <PetMedicalHistoryList medicalHistories={petData.medicalHistories}/>}
+
                     <div className="pet-buttons">
                         <Link to={`/add/medicalHistory/${petData.id}`}>
                             <button>Add medical history</button>

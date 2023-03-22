@@ -1,34 +1,53 @@
 import {Fragment, useEffect, useState} from "react";
-import useFetch from './use_fetch';
 import * as con from './constants';
-import axios from 'axios';
 import Image from "./assets/default-pet-image.jpg";
 import {Link} from "react-router-dom";
-
+import useFetch from "./proccess_data/use_fetch";
 
 //TODO: czy aby na pewno chces zusunąć zwierzę? 
 
 const PetList = () => {
     const [pets, setPets] = useState([]);
+    const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+
     const {
         data,
         error,
         isPending
     } = useFetch(con.URL + con.API_GET_PETS_BY_USER_EMAIL + localStorage.getItem('userEmail'));
+
     useEffect(() => {
         setPets(data);
     }, [data]);
 
+    useEffect(() => {
+        setEmail(localStorage.getItem('userEmail'));
+    }, [email]);
+
     const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(con.URL + con.API_DELETE_PET_BY_ID + id);
-            if (response.status !== 200) {
-                throw new Error('Failed to delete pet');
+        if (window.confirm("Are you sure you want to delete the pet?")) {
+            try {
+                fetch(con.URL + con.API_DELETE_PET_BY_ID + id, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    }
+                }).then(response => {
+                    if (response.status !== 200) {
+                        console.log(response)
+                        throw new Error('Failed to delete pet');
+                    }
+                    const currPets = pets.filter((pet) => pet.id !== id);
+                    console.log(currPets)
+                    setPets(currPets);
+                }).catch(error => {
+                    console.log(error)
+                });
+            } catch (e) {
+                console.error(e);
             }
-            setPets((prevPets) => prevPets.filter((pet) => pet.id !== id));
-        } catch (e) {
-            console.error(e);
         }
+
     };
 
     const getPetImage = (id) => {
@@ -40,8 +59,6 @@ const PetList = () => {
     }
 
     const renderPetList = () => {
-        console.log("LAL")
-        console.log(localStorage.getItem('userId'));
         if (isPending) {
             return <div>Loading...</div>;
         }
@@ -51,7 +68,18 @@ const PetList = () => {
         }
 
         if (!data || !data.length) {
-            return <div>No pets found.</div>;
+
+            return <div>No pets found.
+                <div className="pet-add">
+                    <Link to={'/add/pet'}>
+                        <button>
+                            <img className="pet-add-image" src={require("./assets/add-pet-image.png")}
+                                 alt="Add a new pet"/>
+                        </button>
+                    </Link>
+                    <p> Add pet</p>
+                </div>
+            </div>;
         }
         return (
             <div className="pets-list">
@@ -86,7 +114,6 @@ const PetList = () => {
 }
 
 const Pet = ({pet, handleDelete, getPetImage}) => {
-    console.log(pet.id);
     const petId = pet.id;
     return (<div className="pet-preview" key={pet.id}>
         <Link to={con.PET + petId}>

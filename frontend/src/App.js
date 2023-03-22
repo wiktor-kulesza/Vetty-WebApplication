@@ -7,11 +7,21 @@ import Pet from './pet';
 import Login from './auth/login';
 import RouteGuard from './route_guard';
 import Signup from './auth/signup';
+import LogoutIfJwtExpired from './auth/logout';
+import Verify from './auth/verify';
 
 function App() {
+
+  function logOut() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    window.location.reload();
+  }
+
   return (
       <Router>
         <div className="App">
+          <LogoutIfJwtExpired/>
           <Navbar/>
           <div className="content">
             <Routes>
@@ -26,9 +36,11 @@ function App() {
               <Route path="/pet/:id" element={<Pet/>}/>
             </Routes>
           </div>
+          <Verify logOut={logOut}/>
         </div>
       </Router>
   );
+
 }
 
 export default App;

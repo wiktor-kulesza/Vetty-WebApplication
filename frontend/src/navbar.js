@@ -20,8 +20,6 @@ const Navbar = () => {
         }
     };
 
-    console.log("NAVBAR");
-    console.log(localStorage.getItem("token"));
     return (
         <nav className="navbar">
             <h1>Vetty</h1>
