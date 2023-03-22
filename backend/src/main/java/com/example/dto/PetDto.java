@@ -14,13 +14,15 @@ public class PetDto {
 
     private String species;
 
+    private String sex;
+
     private String breedName;
 
     private Integer imageId;
 
     private Date birthDate;
 
-    private Integer ownerId;
+    private String ownerEmail;
 
     private ImageDto image;
 
