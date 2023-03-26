@@ -1,10 +1,12 @@
-package com.example.entity.MedicalHistory;
+package com.example.entity.medicalhistory;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,9 +20,10 @@ public class Tag {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    private String tag;
+    private String value;
 
-    @ManyToMany(mappedBy = "tags")
-    private List<MedicalHistory> medicalHistoryList;
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<MedicalHistory> medicalHistoryList = new ArrayList<>();
 
 }
