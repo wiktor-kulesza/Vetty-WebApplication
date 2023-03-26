@@ -106,7 +106,6 @@ public class PetController {
         return petDto;
     }
 
-
     private Pet convertToEntity(PetDto petDto) {
         // TODO: add image validation and refactor with abstract factory pattern
         if (!breedService.validateBreed(petDto.getBreedName()) || !userService.validateUser(petDto.getOwnerEmail()))

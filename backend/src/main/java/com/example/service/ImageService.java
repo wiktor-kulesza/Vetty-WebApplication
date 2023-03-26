@@ -16,7 +16,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
     public Image getImageById(Integer id) {
-        return imageRepository.findById(id).get();
+        return imageRepository.findById(id).orElse(null);
     }
 
     public Integer addImage(MultipartFile file) throws IOException {
@@ -29,5 +29,9 @@ public class ImageService {
 
     public List<Image> getAllImages() {
         return imageRepository.findAll();
+    }
+
+    public void deleteImage(Integer id) {
+        imageRepository.deleteById(id);
     }
 }

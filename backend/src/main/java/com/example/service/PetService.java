@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.PetDto;
+import com.example.entity.Image;
 import com.example.entity.Sex;
 import com.example.entity.pet.Pet;
 import com.example.repository.PetRepository;
@@ -20,7 +21,6 @@ public class PetService {
     private final BreedService breedService;
 
     private final ImageService imageService;
-
 
     public List<Pet> getAllPets() {
         return petRepository.findAll();
@@ -56,7 +56,11 @@ public class PetService {
         pet.setBreed(breedService.getBreedByName(petDto.getBreedName()));
         pet.setBirthDate(petDto.getBirthDate());
         if (petDto.getImageId() != null) {
-            pet.setImage(imageService.getImageById(petDto.getImageId()));
+            Image newImage = imageService.getImageById(petDto.getImageId());
+            if (pet.getImage() != null && !pet.getImage().equals(newImage)) {
+                pet.setImage(null);
+            }
+            pet.setImage(newImage);
         }
         petRepository.save(pet);
         return pet;

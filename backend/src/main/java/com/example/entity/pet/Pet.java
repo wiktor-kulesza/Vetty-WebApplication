@@ -2,10 +2,11 @@ package com.example.entity.pet;
 
 import com.example.entity.Breed;
 import com.example.entity.Image;
-import com.example.entity.MedicalHistory.MedicalHistory;
 import com.example.entity.Sex;
 import com.example.entity.User;
+import com.example.entity.medicalhistory.MedicalHistory;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public abstract class Pet {
     @JoinColumn(name = "breed_id")
     private Breed breed;
 
-    @ManyToOne
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "image_id")
     private Image image;
 
@@ -51,7 +52,8 @@ public abstract class Pet {
     @JsonBackReference
     private User owner;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pet")
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     private List<MedicalHistory> medicalHistories = new java.util.ArrayList<>();
 
 }
