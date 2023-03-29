@@ -1,9 +1,11 @@
 package com.example.dto;
 
+import com.example.entity.medicalhistory.MedicalHistory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,6 +25,8 @@ public class PetDto {
     private Date birthDate;
 
     private String ownerEmail;
+
+    private List<MedicalHistory> medicalHistories;
 
     private ImageDto image;
 

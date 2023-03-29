@@ -1,5 +1,6 @@
 package com.example.dto;
 
+import com.example.entity.medicalhistory.BloodFactor;
 import com.example.entity.medicalhistory.Result;
 import com.example.entity.medicalhistory.Tag;
 import lombok.Data;
@@ -22,7 +23,9 @@ public class MedicalHistoryDto {
 
     private Integer petId;
 
-    private List<Result> bloodResults;
+    private List<BloodFactor> bloodResults;
+
+    private List<Result> results;
 
     private List<Thread> threads;
 

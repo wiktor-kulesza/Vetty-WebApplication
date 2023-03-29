@@ -24,7 +24,7 @@ public class MedicalHistoryService {
 
     public List<Tag> createTagsForHistory(MedicalHistory medicalHistory) {
         List<Tag> tags = new ArrayList<>();
-        for (Result result : medicalHistory.getBloodResults()) {
+        for (Result result : medicalHistory.getResults()) {
             for (BloodFactor factor : result.getFactors()) {
                 tags.add(createTag(factor, medicalHistory));
             }
@@ -55,11 +55,19 @@ public class MedicalHistoryService {
     }
 
     public MedicalHistory addMedicalHistory(MedicalHistory medicalHistory) {
+        medicalHistory.setTags(createTagsForHistory(medicalHistory));
+        medicalHistory.getResults().forEach(result -> result.setMedicalHistory(medicalHistory));
         return medicalHistoryRepository.save(medicalHistory);
     }
 
     public Integer deleteMedicalHistory(Integer id) {
         medicalHistoryRepository.deleteById(id);
         return id;
+    }
+
+    public Result createBloodResults(List<BloodFactor> bloodResults) {
+        Result result = Result.builder().factors(bloodResults).build();
+        bloodResults.forEach(factor -> factor.setResult(result));
+        return result;
     }
 }

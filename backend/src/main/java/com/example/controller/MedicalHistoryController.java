@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dto.MedicalHistoryDto;
 import com.example.entity.medicalhistory.MedicalHistory;
+import com.example.entity.medicalhistory.Result;
 import com.example.exception.MedicalHistoryToDtoConvertionException;
 import com.example.service.MedicalHistoryService;
 import com.example.service.PetService;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -27,18 +30,26 @@ public class MedicalHistoryController {
     public ResponseEntity<MedicalHistory> addMedicalHistory(@RequestBody MedicalHistoryDto medicalHistoryDto) throws MedicalHistoryToDtoConvertionException {
         MedicalHistory medicalHistory = convertToEntity(medicalHistoryDto);
         MedicalHistory savedMedicalHistory = medicalHistoryService.addMedicalHistory(medicalHistory);
-        savedMedicalHistory.setTags(medicalHistoryService.createTagsForHistory(medicalHistory));
+
         return ResponseEntity.ok(savedMedicalHistory);
     }
 
     private MedicalHistory convertToEntity(MedicalHistoryDto medicalHistoryDto) throws MedicalHistoryToDtoConvertionException {
         MedicalHistory medicalHistory = MedicalHistory.builder()
                 .id(medicalHistoryDto.getId())
-                .bloodResults(medicalHistoryDto.getBloodResults())
+                .results(medicalHistoryDto.getResults())
                 .date(medicalHistoryDto.getDate())
                 .description(medicalHistoryDto.getDescription())
                 .diagnosis(medicalHistoryDto.getDiagnosis())
                 .build();
+        if (medicalHistoryDto.getBloodResults() != null && !medicalHistoryDto.getBloodResults().isEmpty()) {
+            if (medicalHistory.getResults() == null) {
+                ArrayList<Result> results = new ArrayList<>();
+                results.add(medicalHistoryService.createBloodResults(medicalHistoryDto.getBloodResults()));
+                medicalHistory.setResults(results);
+            } else
+                medicalHistory.getResults().add(medicalHistoryService.createBloodResults(medicalHistoryDto.getBloodResults()));
+        }
         if (medicalHistoryDto.getPetId() != null) {
             medicalHistory.setPet(petService.getPetById(medicalHistoryDto.getPetId())
                     .orElseThrow(() -> new MedicalHistoryToDtoConvertionException("Pet with id " + medicalHistoryDto.getPetId() + " not found")));

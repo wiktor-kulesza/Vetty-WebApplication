@@ -36,7 +36,7 @@ public class MedicalHistory {
 
     @OneToMany(mappedBy = "medicalHistory", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Result> bloodResults;
+    private List<Result> results;
 
     @OneToMany(mappedBy = "medicalHistory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Thread> threads;

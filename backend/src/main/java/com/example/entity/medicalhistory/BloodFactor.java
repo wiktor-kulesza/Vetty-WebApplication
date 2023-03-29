@@ -19,7 +19,6 @@ public class BloodFactor {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     private BloodFactorType bloodFactorType;
 
     private Double value;

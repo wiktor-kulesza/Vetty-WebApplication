@@ -1,7 +1,6 @@
 package com.example.entity.medicalhistory;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,7 +24,6 @@ public class Result {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    @JsonIgnore
     @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;
 
