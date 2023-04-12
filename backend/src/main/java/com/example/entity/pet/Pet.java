@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Getter
@@ -53,7 +54,15 @@ public abstract class Pet {
     private User owner;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicalHistory> medicalHistories = new java.util.ArrayList<>();
 
+    public void removeMedicalHistories() {
+        for (Iterator<MedicalHistory> iterator = medicalHistories.iterator(); iterator.hasNext(); ) {
+            MedicalHistory medicalHistory = iterator.next();
+            medicalHistory.removeAllTags();
+            medicalHistory.setPet(null);
+            iterator.remove();
+        }
+    }
 }
