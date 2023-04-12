@@ -4,14 +4,14 @@ import axios from 'axios';
 import jwt from 'jwt-decode'
 // import bcrypt from "bcryptjs-react";
 import * as constants from '../constants';
+import "bootstrap/dist/css/bootstrap.min.css";
+import {Button, Form} from 'react-bootstrap';
+
 
 const Login = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const handleEmailChange = (event) => setEmail(event.target.value);
-    const handlePasswordChange = (event) => setPassword(event.target.value);
 
     const navigate = useNavigate();
 
@@ -29,6 +29,7 @@ const Login = () => {
         }
 
         try {
+            console.log("XDDD")
             // const hashedPassword = bcrypt.hashSync(password)
             await axios.post(constants.URL + constants.API_LOGIN, {}, {params: {email: email, password: password}})
                 .then(response => {
@@ -46,22 +47,36 @@ const Login = () => {
     };
 
     return (
-        <div className='login'>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div className='form-div'>
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" value={email} onChange={handleEmailChange}/>
+        <div className='mb-3 '>
+            <Form onSubmit={handleSubmit}>
+                <div className='row-12 col-md-6'>
+                    <div className='row-12'>
+                        <Form.Group className="mb-3" controlId="email">
+                            <Form.Label>Email:</Form.Label>
+                            <Form.Control
+                                type="email"
+                                placeholder="e.g.john@gmail.com"
+                                onChange={(event) => setEmail(event.target.value)}
+                                required/>
+                        </Form.Group>
+                    </div>
+                    <div className='row-12'>
+                        <Form.Group className="mb-3" controlId="password">
+                            <Form.Label>Password:</Form.Label>
+                            <Form.Control
+                                type="password"
+                                onChange={(event) => setPassword(event.target.value)}
+                                required/>
+                        </Form.Group>
+                    </div>
+                    <Button type="submit">Login</Button>
                 </div>
-                <div className='form-div'>
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" value={password} onChange={handlePasswordChange}/>
+                <div className='row-12'>
+                    <p>
+                        Don't have an account? <Link to="/signup">Sign up</Link>.
+                    </p>
                 </div>
-                <button type="submit">Login</button>
-            </form>
-            <p>
-                Don't have an account? <Link to="/signup">Sign up</Link>.
-            </p>
+            </Form>
         </div>
     );
 };
