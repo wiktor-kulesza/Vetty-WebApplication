@@ -1,5 +1,4 @@
 import Home from './home';
-import Navbar from './navbar';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import ModifyPet from './modifyPet';
 import AddPet from './addPet';
@@ -9,6 +8,10 @@ import RouteGuard from './route_guard';
 import Signup from './auth/signup';
 import LogoutIfJwtExpired from './auth/logout';
 import Verify from './auth/verify';
+import AddMedicalHistory from './addMedicalHistory';
+import CustomNavbar from './customNavbar';
+import ForumView from './forum';
+import * as con from './constants';
 
 function App() {
 
@@ -22,13 +25,14 @@ function App() {
       <Router>
         <div className="App">
           <LogoutIfJwtExpired/>
-          <Navbar/>
+          <CustomNavbar/>
           <div className="content">
             <Routes>
-              <Route path="/add/pet" element={<AddPet/>}/>
+              <Route path={con.ADD_PET} element={<AddPet/>}/>
+              <Route path={con.ADD_MEDICAL_HISTORY + ":petId"} element={<AddMedicalHistory/>}/>
               <Route element={<RouteGuard/>}>
                 <Route path="/" element={<Home/>}/>
-                <Route path="/forum" element={<Home/>}/>
+                <Route path="/forum" element={<ForumView/>}/>
               </Route>
               <Route path="/login" element={<Login/>}/>
               <Route path="/signup" element={<Signup/>}/>
