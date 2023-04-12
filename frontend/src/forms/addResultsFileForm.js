@@ -61,6 +61,7 @@ const AddResultsFileForm = ({data, setData}) => {
                         }
                     });
                     setData(newData); // update the data in the parent component
+                    alert("Results uploaded successfully!");
                 })
                 .catch(error => {
                     console.log(error);

@@ -56,6 +56,7 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
             }
         }
         console.log("factor Array", factorArray);
+        console.log("petId", petId);
         fetch(constants.URL + constants.API_ADD_MEDICAL_HISTORY, {
             method: 'POST',
             headers: {
