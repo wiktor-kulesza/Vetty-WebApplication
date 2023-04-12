@@ -1,10 +1,9 @@
 import {Fragment, useEffect, useState} from "react";
 import * as con from './constants';
 import Image from "./assets/default-pet-image.jpg";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import useFetch from "./proccess_data/use_fetch";
-
-//TODO: czy aby na pewno chces zusunąć zwierzę? 
+import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 
 const PetList = () => {
     const [pets, setPets] = useState([]);
@@ -38,7 +37,6 @@ const PetList = () => {
                         throw new Error('Failed to delete pet');
                     }
                     const currPets = pets.filter((pet) => pet.id !== id);
-                    console.log(currPets)
                     setPets(currPets);
                 }).catch(error => {
                     console.log(error)
@@ -82,24 +80,33 @@ const PetList = () => {
             </div>;
         }
         return (
-            <div className="pets-list">
-                {pets &&
-                pets.map(pet => (
-                        <Fragment key={pet.id}>
-                            <Pet pet={pet} handleDelete={handleDelete} getPetImage={getPetImage}/>
-                        </Fragment>
-                    )
-                )}
-                <div className="pet-add">
-                    <Link to={'/add/pet'}>
-                        <button>
-                            <img className="pet-add-image" src={require("./assets/add-pet-image.png")}
-                                 alt="Add a new pet"/>
-                        </button>
-                    </Link>
-                    <p> Add pet</p>
-                </div>
-            </div>
+            <Container>
+                <Row xs={12} sm={12} md={6} lg={6} className="g-4">
+                    {pets &&
+                    pets.map(pet => (
+                            <Fragment key={pet.id}>
+                                {/* {console.log(pet)} */}
+                                <Pet pet={pet} handleDelete={handleDelete} getPetImage={getPetImage}/>
+                            </Fragment>
+                        )
+                    )}
+                    <Col xs={12} sm={12} md={6} lg={4}>
+                        <Card bg='secondary'>
+                            <Card.Link className="card-link" href="/add/pet">
+                                <Card.Img
+                                    src={require("./assets/add-pet-image.png")}
+                                    alt="Example Image"
+                                    style={{opacity: 0.7}}/>
+
+                                <Card.Body>
+                                    <Card.Title>Add new pet</Card.Title>
+
+                                </Card.Body>
+                            </Card.Link>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
 
         );
     };
@@ -114,25 +121,44 @@ const PetList = () => {
 }
 
 const Pet = ({pet, handleDelete, getPetImage}) => {
+    const navigate = useNavigate();
+    const age = Math.floor((Date.now() - new Date(pet.dateOfBirth)) / 31557600000);
     const petId = pet.id;
-    return (<div className="pet-preview" key={pet.id}>
-        <Link to={con.PET + petId}>
-            {<img className="pet-preview-image"
-                  src={pet.imageId ? `data:image/jpeg;base64,${getPetImage(pet.id)}` : Image}
-                  alt={pet.name}/>}
-        </Link>
-        {pet.species && <p> {pet.species}</p>}
-        {pet.name && <p> Name: {pet.name}</p>}
-        {pet.breed && <p>Breed: {pet.breed.name}</p>}
-        {pet.birthDate && <p>Birth date: {pet.birthDate}</p>}
-        <div className="pet-buttons">
-            <Link to={con.MODIFY_PET + pet.id}>
-                <button>Modify</button>
-            </Link>
-            <button onClick={() => handleDelete(pet.id)}>Delete</button>
 
-        </div>
-    </div>)
+    const onView = (petId) => {
+        navigate(con.PET + petId);
+    }
+
+    const onEdit = (petId) => {
+        navigate(con.MODIFY_PET + petId);
+    }
+
+    const onDelete = (petId) => {
+        handleDelete(petId);
+    }
+
+    return (
+        <Col key={pet.id} xs={12} sm={12} md={6} lg={4}>
+            <Card>
+                <Card.Img variant="top" src={pet.imageId ? `data:image/jpeg;base64,${getPetImage(pet.id)}` : Image}/>
+                <Card.Body>
+                    <Card.Title>{pet.name}</Card.Title>
+                    <Card.Text>
+                        {pet.breed && <p>Breed: {pet.breed}</p>}
+                        {age && <p>Age: {age} years</p>}
+                        {pet.name && <p>Name: {pet.name}</p>}
+                    </Card.Text>
+                    <div style={{maxWidth: '100%'}}>
+                        <Button variant="primary" size='sm' onClick={() => onView(petId)}>View</Button>
+                        <Button variant="warning" size='sm' onClick={() => onEdit(petId)}>Edit</Button>
+                        <Button variant="danger" size='sm' onClick={() => onDelete(petId)}>Delete</Button>
+                    </div>
+                </Card.Body>
+            </Card>
+        </Col>
+    )
+
+
 }
 
 export default PetList;
