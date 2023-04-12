@@ -35,8 +35,14 @@ public class PetService {
     }
 
     public Integer removePet(Integer id) {
-        petRepository.deleteById(id);
-        return id;
+        Pet pet = petRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return removePet(pet);
+    }
+
+    private Integer removePet(Pet pet) {
+        pet.removeMedicalHistories();
+        petRepository.delete(pet);
+        return pet.getId();
     }
 
     public List<Pet> getAllPetsByUserEmail(String email) {
