@@ -10,9 +10,10 @@ import com.example.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,17 +23,33 @@ public class MedicalHistoryService {
 
     private final TagRepository tagRepository;
 
-    public List<Tag> createTagsForHistory(MedicalHistory medicalHistory) {
-        List<Tag> tags = new ArrayList<>();
+    public MedicalHistory addMedicalHistory(MedicalHistory medicalHistory) {
+        medicalHistory.getResults().forEach(result -> result.setMedicalHistory(medicalHistory));
+        Set<Tag> tags = createTags(medicalHistory);
+        addTags(medicalHistory, tags);
+        return medicalHistoryRepository.save(medicalHistory);
+    }
+
+    private void addTags(MedicalHistory medicalHistory, Set<Tag> tags) {
+        Set<Tag> newTags = new HashSet<>();
+        for (Tag tag : tags) {
+            Tag existingTag = tagRepository.findByValue(tag.getValue()).orElse(null);
+            newTags.add(Objects.requireNonNullElse(existingTag, tag));
+        }
+        medicalHistory.setTags(newTags);
+    }
+
+    private Set<Tag> createTags(MedicalHistory medicalHistory) {
+        Set<Tag> tags = new HashSet<>();
         for (Result result : medicalHistory.getResults()) {
             for (BloodFactor factor : result.getFactors()) {
-                tags.add(createTag(factor, medicalHistory));
+                tags.add(createTag(factor));
             }
         }
         return tags;
     }
 
-    private Tag createTag(BloodFactor factor, MedicalHistory medicalHistory) {
+    private Tag createTag(BloodFactor factor) {
         String value;
         if (factor.isHigh()) {
             value = factor.getBloodFactorType() + " " + TagConstants.HYPOTHYROIDISM;
@@ -41,24 +58,11 @@ public class MedicalHistoryService {
         } else {
             value = factor.getBloodFactorType() + " " + TagConstants.NORMAL;
         }
-        Optional<Tag> searchedTag = tagRepository.findByValue(value);
-        if (searchedTag.isPresent()) {
-            searchedTag.get().getMedicalHistoryList().add(medicalHistory);
-            return searchedTag.get();
-        } else {
-            Tag tag = new Tag();
-            tag.setValue(value);
-            tag.getMedicalHistoryList().add(medicalHistory);
-            tagRepository.save(tag);
-            return tag;
-        }
+        Tag tag = new Tag();
+        tag.setValue(value);
+        return tag;
     }
 
-    public MedicalHistory addMedicalHistory(MedicalHistory medicalHistory) {
-        medicalHistory.setTags(createTagsForHistory(medicalHistory));
-        medicalHistory.getResults().forEach(result -> result.setMedicalHistory(medicalHistory));
-        return medicalHistoryRepository.save(medicalHistory);
-    }
 
     public Integer deleteMedicalHistory(Integer id) {
         medicalHistoryRepository.deleteById(id);

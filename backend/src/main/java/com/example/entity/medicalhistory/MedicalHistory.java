@@ -8,7 +8,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -41,8 +43,20 @@ public class MedicalHistory {
     @OneToMany(mappedBy = "medicalHistory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Thread> threads;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Tag> tags;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "medical_history_tags",
+            joinColumns = @JoinColumn(name = "medical_history_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> tags = new HashSet<>();
 
 
+    public void removeAllTags() {
+        tags.forEach(tag -> tag.getMedicalHistories().remove(this));
+        tags.clear();
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getMedicalHistories().add(this);
+    }
 }
