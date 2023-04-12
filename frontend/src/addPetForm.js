@@ -58,7 +58,8 @@ const AddPetForm = () => {
         console.log(data.image)
         if (window.confirm("Are you sure you want to add pet?")) {
             if (data.image[0] && data.image[0] !== undefined) {
-                const blob = new Blob([data.image[0]], {type: "image/jpeg"});
+                const dataImage = data.image[0];
+                const blob = new Blob([dataImage], {type: dataImage.type});
                 console.log("BLOB")
                 console.log(blob);
                 const formData = new FormData();
