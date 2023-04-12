@@ -1,26 +1,14 @@
-import axios from "axios";
 import PetMedicalHistoryList from "./petMedicalHistoryList";
 import * as constants from "./constants";
-import {Link, useParams} from "react-router-dom";
-import Image from "./assets/default-pet-image.jpg";
+import {useParams} from "react-router-dom";
+import DefaultImage from "./assets/default-pet-image.jpg";
 import useFetch from './proccess_data/use_fetch';
+import {Image, ListGroup, Tab, Tabs} from "react-bootstrap";
+
 
 const Pet = () => {
     const {id} = useParams();
-    console.log(id)
     const {data: petData, error, isPending} = useFetch(constants.URL + constants.API_GET_PET_BY_ID + id);
-
-    const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(constants.API_DELETE_PET_BY_ID + id);
-            if (response.status !== 200) {
-                throw new Error('Failed to delete pet');
-            }
-            window.location.href = '/';
-        } catch (e) {
-            console.error(e);
-        }
-    };
 
     const renderPet = () => {
         if (isPending) {
@@ -31,26 +19,39 @@ const Pet = () => {
         }
         if (petData) {
             return (
-                <div className="pet">
-                    {<img className="pet-image"
-                          src={petData.image && petData.image.imageBase64 ? `data:image/jpeg;base64,${(petData.image.imageBase64)}` : Image}
-                          alt={petData.name}/>}
-                    {petData.species && <p> {petData.species}</p>}
-                    {petData.sex && <p> {petData.sex}</p>}
-                    {petData.name && <p> Name: {petData.name}</p>}
-                    {petData.breed && <p>Breed: {petData.breed.name}</p>}
-                    {petData.birthDate && <p>Birth date: {petData.birthDate}</p>}
-                    {petData.medicalHistories && <PetMedicalHistoryList medicalHistories={petData.medicalHistories}/>}
-
-                    <div className="pet-buttons">
-                        <Link to={`/add/medicalHistory/${petData.id}`}>
-                            <button>Add medical history</button>
-                        </Link>
-                        <Link to={`/modify/pets/${petData.id}`}>
-                            <button>Modify</button>
-                        </Link>
-                        <button onClick={() => handleDelete(petData.id)}>Delete</button>
-                    </div>
+                <div className="mb-5">
+                    <Tabs
+                        defaultActiveKey="details"
+                        id="pet-tabs"
+                        className="ml-5">
+                        <Tab eventKey="details" title="Details">
+                            {<Image className="pet-image"
+                                    fluid={false}
+                                    src={petData.image && petData.image.imageBase64 ? `data:image/jpeg;base64,${(petData.image.imageBase64)}` : DefaultImage}
+                                    alt={petData.name}/>}
+                            <ListGroup className="h-100">
+                                <ListGroup.Item>
+                                    {petData.species && <p> {petData.species}</p>}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    {petData.sex && <p> Sex: {petData.sex.toLowerCase()}</p>}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    {petData.name && <p> Name: {petData.name}</p>}</ListGroup.Item>
+                                <ListGroup.Item>
+                                    {petData.breedName && <p>Breed: {petData.breedName}</p>}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    {petData.birthDate && <p>Birth date: {petData.birthDate}</p>}
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Tab>
+                        <Tab eventKey="medical-history" title="Medical Histories">
+                            <PetMedicalHistoryList medicalHistories={petData.medicalHistories} petId={id}/>
+                        </Tab>
+                        <Tab eventKey="threads" title="Threads">
+                        </Tab>
+                    </Tabs>
                 </div>
             )
         } else {
@@ -59,7 +60,6 @@ const Pet = () => {
     }
     return (
         <div>
-            <h2>Your Pet</h2>
             {renderPet()}
         </div>
     );
