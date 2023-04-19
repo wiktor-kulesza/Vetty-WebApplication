@@ -27,8 +27,6 @@ public class MedicalHistoryDto {
 
     private List<Result> results;
 
-    private List<Thread> threads;
-
     private List<Tag> tags;
 
 }
