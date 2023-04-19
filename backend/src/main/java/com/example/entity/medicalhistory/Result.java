@@ -23,7 +23,7 @@ public class Result {
     private List<BloodFactor> factors;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "medical-history-result")
     @JoinColumn(name = "medical_history_id")
     private MedicalHistory medicalHistory;
 

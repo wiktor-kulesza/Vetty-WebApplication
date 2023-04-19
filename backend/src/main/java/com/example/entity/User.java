@@ -29,7 +29,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-pet")
     private List<Pet> pets;
 
     @OneToMany(mappedBy = "author")

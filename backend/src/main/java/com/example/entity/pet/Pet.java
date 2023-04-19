@@ -50,10 +50,10 @@ public abstract class Pet {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user-pet")
     private User owner;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "pet-medical-history")
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedicalHistory> medicalHistories = new java.util.ArrayList<>();
 

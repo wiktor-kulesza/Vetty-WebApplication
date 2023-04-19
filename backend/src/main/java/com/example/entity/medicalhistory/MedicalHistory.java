@@ -3,6 +3,7 @@ package com.example.entity.medicalhistory;
 import com.example.entity.Thread;
 import com.example.entity.pet.Pet;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -27,7 +28,7 @@ public class MedicalHistory {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
-    @JsonBackReference
+    @JsonBackReference(value = "pet-medical-history")
     private Pet pet;
 
     private Date date;
@@ -37,9 +38,10 @@ public class MedicalHistory {
     private String diagnosis;
 
     @OneToMany(mappedBy = "medicalHistory", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference(value = "medical-history-result")
     private List<Result> results;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "medicalHistory", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Thread> threads;
 
