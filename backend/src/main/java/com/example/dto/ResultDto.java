@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ResultDto {
-    Integer id;
+    private Integer id;
 
-    List<BloodFactor> factors;
+    private List<BloodFactor> factors;
 }
