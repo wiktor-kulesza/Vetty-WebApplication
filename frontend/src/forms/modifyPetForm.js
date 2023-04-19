@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import useFetch from './proccess_data/use_fetch';
-import * as constants from "./constants";
+import useFetch from '../proccess_data/use_fetch';
+import * as constants from "../constants";
 
 const ModifyPetForm = ({pet}) => {
     const navigate = useNavigate();

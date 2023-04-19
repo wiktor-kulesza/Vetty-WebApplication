@@ -1,4 +1,4 @@
-import AddPetForm from "./addPetForm";
+import AddPetForm from "./forms/addPetForm";
 
 
 const AddPet = () => {

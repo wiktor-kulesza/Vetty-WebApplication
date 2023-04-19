@@ -1,9 +1,9 @@
 import {useForm} from 'react-hook-form';
-import * as constants from './constants';
+import * as constants from '../constants';
 import {useEffect, useState} from 'react';
-import useFetch from './proccess_data/use_fetch';
+import useFetch from '../proccess_data/use_fetch';
 import {useNavigate} from 'react-router-dom';
-import ValidateImage from './data_validation/validateImage';
+import ValidateImage from '../data_validation/validateImage';
 
 const AddPetForm = () => {
     const navigate = useNavigate();
