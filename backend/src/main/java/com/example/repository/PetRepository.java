@@ -8,9 +8,6 @@ import java.util.List;
 
 @Repository
 public interface PetRepository extends JpaRepository<Pet, Integer> {
-    List<Pet> findAllByOwnerId(Integer id);
-
-    List<Pet> getAllByOwnerId(Integer id);
 
     List<Pet> findAllByOwnerEmail(String email);
 }
