@@ -45,7 +45,6 @@ const CustomNavbar = () => {
             <Nav
                 className="me-auto my-2 my-lg-0"
                 style={{maxHeight: '100px'}}
-                Vetty
             >
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/forum">Forum</Nav.Link>

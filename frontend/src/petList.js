@@ -16,6 +16,7 @@ const PetList = () => {
     } = useFetch(con.URL + con.API_GET_PETS_BY_USER_EMAIL + localStorage.getItem('userEmail'));
 
     useEffect(() => {
+        console.log("pets", data)
         setPets(data);
     }, [data]);
 

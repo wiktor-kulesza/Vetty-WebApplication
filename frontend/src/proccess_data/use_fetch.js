@@ -11,7 +11,7 @@ const useFetch = (url) => {
     const fetchData = async () => {
       try {
         setIsPending(true);
-
+        console.log("url", url);
         const response = await axios.get(url, {headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}});
         if (response.status !== 200) {
           if (response.status === 403) {

@@ -29,7 +29,6 @@ const Login = () => {
         }
 
         try {
-            console.log("XDDD")
             // const hashedPassword = bcrypt.hashSync(password)
             await axios.post(constants.URL + constants.API_LOGIN, {}, {params: {email: email, password: password}})
                 .then(response => {
