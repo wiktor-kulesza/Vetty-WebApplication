@@ -1,17 +1,40 @@
-import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import {Button, Col, Container, Dropdown, Form, Row} from "react-bootstrap";
+import AddThreadForm from "./forms/addThreadForm";
+import useFetch from "./proccess_data/use_fetch";
+import * as constants from "./constants";
+import ThreadList from "./threadList";
 
 const breeds = ["Labrador", "Poodle", "Golden Retriever", "Bulldog", "Chihuahua", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 const tags = ["Training", "Health", "Behavior", "Adoption", "Grooming"];
 
+
 function ForumView() {
     const [showSearchCriteria, setShowSearchCriteria] = useState(false);
+    const [showAddThread, setShowAddThread] = useState(false);
     const [species, setSpecies] = useState("");
     const [selectedBreeds, setSelectedBreeds] = useState([]);
     const [ageRange, setAgeRange] = useState([1, 25]);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState(breeds);
+    const [threads, setThreads] = useState([]);
+
+    const {
+        data: pets,
+    } = useFetch(constants.URL + constants.API_GET_PETS_BY_USER_EMAIL + localStorage.getItem('userEmail'));
+
+    const {
+        data: threadsFromServer,
+    } = useFetch(constants.URL + constants.API_GET_ALL_THREADS);
+
+    useEffect(() => {
+        setThreads(threadsFromServer);
+    }, [threadsFromServer]);
+
+
+    const handleAddThreadButtonClick = () => {
+        setShowAddThread(!showAddThread);
+    };
 
     const handleSearchSubmit = (event) => {
         event.preventDefault();
@@ -34,6 +57,10 @@ function ForumView() {
         setSearchResults(filteredBreeds);
     };
 
+    const handleThreadAdded = (newThread) => {
+        setThreads([...threads, newThread]);
+    };
+
     return (
         <Container>
             <Row>
@@ -42,16 +69,20 @@ function ForumView() {
             <Row>
                 <div className="d-flex align-items-center mb-3">
                     <Col>
-                        <Link to="/create/thread">
-                            <Button>Create new thread</Button>
-                        </Link>
+                        <Button onClick={handleAddThreadButtonClick}>
+                            {showAddThread ? "Cancel" : "Add new thread"}
+                        </Button>
                     </Col>
-                    <Col><Button onClick={() => setShowSearchCriteria(!showSearchCriteria)}>
+                    <Col><Button onClick={() => {
+                        setShowSearchCriteria(!showSearchCriteria)
+                    }}>
                         {showSearchCriteria ? "Hide Search Criteria" : "Show Search Criteria"}
                     </Button></Col>
 
                 </div>
             </Row>
+            {showAddThread && <AddThreadForm authorEmail={localStorage.getItem('userEmail')} pets={pets}
+                                             onThreadAdded={handleThreadAdded}/>}
             {showSearchCriteria && (
                 <Form onSubmit={handleSearchSubmit}>
                     <Dropdown className="mb-3">
@@ -117,8 +148,11 @@ function ForumView() {
                             ))}
                         </div>
                     </Form.Group>
-                    <Button type="submit" variant="primary">Search</Button>
+                    <Button className='float-end' type="submit" variant="primary">Search</Button>
                 </Form>
+            )}
+            {threads && (
+                <ThreadList threads={threads}/>
             )}
         </Container>);
 }
