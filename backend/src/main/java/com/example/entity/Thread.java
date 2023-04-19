@@ -1,16 +1,16 @@
 package com.example.entity;
 
 import com.example.entity.medicalhistory.MedicalHistory;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "thread")
 public class Thread {
@@ -30,4 +30,7 @@ public class Thread {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "thread")
     private List<Comment> comments = new java.util.ArrayList<>();
 
+    private String title;
+
+    private String content;
 }
