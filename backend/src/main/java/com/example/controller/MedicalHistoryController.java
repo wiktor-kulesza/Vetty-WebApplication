@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -24,6 +25,28 @@ public class MedicalHistoryController {
     private final PetService petService;
 
     private final ModelMapper modelMapper;
+
+    @CrossOrigin
+    @GetMapping(value = "/all")
+    public ResponseEntity<List<MedicalHistoryDto>> getAllMedicalHistories() {
+        List<MedicalHistory> medicalHistories = medicalHistoryService.getAllMedicalHistories();
+        List<MedicalHistoryDto> medicalHistoryDtos = new ArrayList<>();
+        for (MedicalHistory medicalHistory : medicalHistories) {
+            medicalHistoryDtos.add(modelMapper.map(medicalHistory, MedicalHistoryDto.class));
+        }
+        return ResponseEntity.ok(medicalHistoryDtos);
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/user")
+    public ResponseEntity<List<MedicalHistoryDto>> getMedicalHistoriesByUserEmail(@RequestBody String email) {
+        List<MedicalHistory> medicalHistories = medicalHistoryService.getMedicalHistoriesByUserEmail(email);
+        List<MedicalHistoryDto> medicalHistoryDtos = new ArrayList<>();
+        for (MedicalHistory medicalHistory : medicalHistories) {
+            medicalHistoryDtos.add(modelMapper.map(medicalHistory, MedicalHistoryDto.class));
+        }
+        return ResponseEntity.ok(medicalHistoryDtos);
+    }
 
     @CrossOrigin
     @PostMapping

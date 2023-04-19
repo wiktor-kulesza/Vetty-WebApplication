@@ -74,4 +74,16 @@ public class MedicalHistoryService {
         bloodResults.forEach(factor -> factor.setResult(result));
         return result;
     }
+
+    public List<MedicalHistory> getMedicalHistoriesByUserEmail(String email) {
+        return medicalHistoryRepository.findAllByPetOwnerEmail(email);
+    }
+
+    public MedicalHistory getMedicalHistoryById(Integer id) {
+        return medicalHistoryRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    }
+
+    public List<MedicalHistory> getAllMedicalHistories() {
+        return medicalHistoryRepository.findAll();
+    }
 }
