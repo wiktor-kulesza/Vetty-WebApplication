@@ -22,4 +22,8 @@ public class ThreadService {
     public Thread addThread(Thread thread) {
         return threadRepository.save(thread);
     }
+
+    public Thread getThreadById(Integer id) {
+        return threadRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    }
 }

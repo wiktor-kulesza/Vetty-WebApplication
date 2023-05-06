@@ -57,6 +57,14 @@ public class ThreadController {
     }
 
     @CrossOrigin
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ThreadDto> getThreadById(@PathVariable Integer id) {
+        Thread thread = threadService.getThreadById(id);
+        ThreadDto threadDto = convertToDto(thread);
+        return ResponseEntity.ok(threadDto);
+    }
+
+    @CrossOrigin
     @PostMapping
     public ResponseEntity<ThreadDto> addThread(@RequestBody ThreadDto threadDto) throws ThreadCreationException {
         Thread thread = convertToEntity(threadDto);
