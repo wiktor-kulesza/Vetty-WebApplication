@@ -13,6 +13,8 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
     const [diagnosis, setDiagnosis] = useState(null);
     const [description, setDescription] = useState(null);
     const [date, setDate] = useState(null);
+    const [isMedicalHistoryPublic, setIsMedicalHistoryPublic] = useState(true);
+    const handlePublicToggle = () => setIsMedicalHistoryPublic(!isMedicalHistoryPublic);
     // const [formFactors, setFormFactors] = useState([factors]);
 
     useEffect(() => {
@@ -68,6 +70,7 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
                 description: description,
                 diagnosis: diagnosis,
                 bloodResults: factorArray,
+                isPublic: isMedicalHistoryPublic,
                 petId: petId
             })
         }).then(response => {
@@ -93,6 +96,7 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
                                 onChange={(event) => setDiagnosis(event.target.value)}
                                 required/>
                         </Form.Group>
+
                         <Form.Group className="mb-3" controlId="date">
                             <Form.Label>Date:</Form.Label>
                             <Form.Control
@@ -101,6 +105,16 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
                                 onChange={(event) => setDate(event.target.value)}
                                 required/>
                         </Form.Group>
+                        <Form.Group controlId="isPublic">
+                            <Form.Label>Visibility</Form.Label>
+                            <Form.Check
+                                type="switch"
+                                id="publicToggle"
+                                label={isMedicalHistoryPublic ? "Public" : "Private"}
+                                checked={isMedicalHistoryPublic}
+                                onChange={handlePublicToggle}
+                            />
+                        </Form.Group>
                     </div>
                     <div className='col-12 col-md-6'>
                         <Form.Group className="mb-3" controlId="description">
@@ -108,7 +122,7 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
                             <textarea
                                 className="form-control"
                                 id="exampleFormControlTextarea1"
-                                rows="4"
+                                rows="7"
                                 onChange={(event) => {
                                     setDescription(event.target.value)
                                 }}>
