@@ -1,22 +1,16 @@
 import PetMedicalHistoryList from "./petMedicalHistoryList";
-import * as constants from "./constants";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import DefaultImage from "./assets/default-pet-image.jpg";
-import useFetch from './proccess_data/use_fetch';
 import {Image, ListGroup, Tab, Tabs} from "react-bootstrap";
 
 
 const Pet = () => {
     const {id} = useParams();
-    const {data: petData, error, isPending} = useFetch(constants.URL + constants.API_GET_PET_BY_ID + id);
+    const {state} = useLocation();
+    const {petData} = state;
+
 
     const renderPet = () => {
-        if (isPending) {
-            return <div>Loading...</div>;
-        }
-        if (error) {
-            return <div>Error: {error}</div>;
-        }
         if (petData) {
             return (
                 <div className="mb-5">
@@ -55,7 +49,7 @@ const Pet = () => {
                 </div>
             )
         } else {
-            return <div>No pets found.</div>;
+            return <div>No pet found.</div>;
         }
     }
     return (
