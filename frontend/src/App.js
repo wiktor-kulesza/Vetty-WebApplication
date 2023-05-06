@@ -12,6 +12,8 @@ import AddMedicalHistory from './addMedicalHistory';
 import CustomNavbar from './customNavbar';
 import ForumView from './forum';
 import * as con from './constants';
+import Thread from './thread';
+import ProfileView from './profile';
 
 function App() {
 
@@ -30,6 +32,7 @@ function App() {
             <Routes>
               <Route path={con.ADD_PET} element={<AddPet/>}/>
               <Route path={con.ADD_MEDICAL_HISTORY + ":petId"} element={<AddMedicalHistory/>}/>
+              <Route path={con.THREAD + ":threadId"} element={<Thread/>}/>
               <Route element={<RouteGuard/>}>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/forum" element={<ForumView/>}/>
@@ -38,6 +41,7 @@ function App() {
               <Route path="/signup" element={<Signup/>}/>
               <Route path="/modify/pets/:petId" element={<ModifyPet/>}/>
               <Route path="/pet/:id" element={<Pet/>}/>
+              <Route path="/user/:email" element={<ProfileView/>}/>
             </Routes>
           </div>
           <Verify logOut={logOut}/>

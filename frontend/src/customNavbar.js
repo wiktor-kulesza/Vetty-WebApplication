@@ -5,20 +5,45 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {Button, Col, Form, Row} from "react-bootstrap";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 const CustomNavbar = () => {
   const [search, setSearch] = useState('');
+  const [userExists, setUserExists] = useState(null);
+  const [searchTrigger, setSearchTrigger] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
+    console.log("search", search)
   };
 
-  const handleSearchSubmit = (event) => {
+  useEffect(() => {
+    if (userExists !== null && userExists === true) {
+      navigate("/user/" + search);
+    } else if (userExists !== null && userExists === false) {
+      alert("User " + search + " does not exist");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userExists, searchTrigger]);
+
+  const handleSearchSubmit = async (event) => {
     event.preventDefault();
-    navigate('/');
+
+    const url = con.URL + con.API_CHECK_IF_USER_EXISTS + "?email=" + search;
+    try {
+      await axios.post(url, {headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}})
+          .then((response) => {
+            console.log("response", response.data)
+            setSearchTrigger(!searchTrigger)
+            setUserExists(response.data);
+          })
+    } catch (error) {
+      console.log(error);
+    }
+
   };
 
   const handleButtonClick = () => {
