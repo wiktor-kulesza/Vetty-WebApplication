@@ -13,7 +13,7 @@
     padding: 20px;
     display: flex;
     align-items: center;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     border-bottom: 1px solid #f2f2f2;
 }
@@ -37,7 +37,7 @@
 }
 
 .content {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 40px auto;
     padding: 20px;
 }
@@ -206,9 +206,3 @@ img {
     max-height: 100px; /* adjust to your preference */
     overflow-y: auto;
 }
-
-/* TABLES */
-.row-height {
-    height: 3rem !important;
-}
-  
