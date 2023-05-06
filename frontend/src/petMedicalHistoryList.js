@@ -2,11 +2,10 @@ import {Fragment, useState} from "react";
 import {Link} from "react-router-dom";
 import * as constants from './constants';
 import {Button, Collapse, Table} from "react-bootstrap";
+import PetMedicalHistoryResults from "./petMedicalHistoryResults";
 
 const PetMedicalHistoryList = ({medicalHistories, petId}) => {
     const [data, setData] = useState(medicalHistories);
-
-
     const [resultsShown, setResultsShown] = useState([]);
 
     const handleResultsToggle = (medHisId) => {
@@ -52,6 +51,9 @@ const PetMedicalHistoryList = ({medicalHistories, petId}) => {
                 <td className="text-nowrap"> {medicalHistory.date} </td>
                 <td> {medicalHistory.description}</td>
                 <td>
+                    {medicalHistory.isPublic ? "Public" : "Private"}
+                </td>
+                <td>
                     <Button
                         variant="primary"
                         size="sm"
@@ -81,6 +83,7 @@ const PetMedicalHistoryList = ({medicalHistories, petId}) => {
                             <th>Diagnosis</th>
                             <th>Date</th>
                             <th>Description</th>
+                            <th> Visibility</th>
                             <th>Details</th>
                         </tr>
                         </thead>
@@ -93,7 +96,7 @@ const PetMedicalHistoryList = ({medicalHistories, petId}) => {
                                         <td colSpan="5">
                                             <Collapse in={resultsShown.includes(medicalHistory.id)}>
                                                 <div id="example-collapse-text">
-                                                    <MedicalHistoryResults results={medicalHistory.results}/>
+                                                    <PetMedicalHistoryResults results={medicalHistory.results}/>
                                                 </div>
                                             </Collapse>
                                         </td>
@@ -120,51 +123,6 @@ const PetMedicalHistoryList = ({medicalHistories, petId}) => {
             {renderMedicalHistory()}
         </div>
     );
-}
-
-const MedicalHistoryResults = ({results}) => {
-    return (
-        <div className="medicalHistoryResults">
-            {results.map((result) => (
-                <Table striped bordered hover>
-                    <thead>
-                    <th> Factor</th>
-                    <th> Value</th>
-                    <th> In Norm?</th>
-                    </thead>
-                    <tbody>
-                    {
-                        result.factors.map((factor) => (
-                            <tr>
-                                <td className="row-height"> {factor.bloodFactorType} </td>
-                                <td className="row-height"> {factor.value} </td>
-                                <td className="row-height"><FactorIndicator bloodFactorType={factor}/></td>
-                            </tr>))
-                    }
-                    </tbody>
-                </Table>
-            ))}
-        </div>)
-}
-
-const FactorIndicator = ({bloodFactorType}) => {
-
-    function isInNorm() {
-        return !bloodFactorType.high && !bloodFactorType.low;
-    }
-
-    function isHigh() {
-        return bloodFactorType.high;
-    }
-
-
-    if (isInNorm()) {
-        return (<p className='text-success'>In norm</p>)
-    } else if (isHigh()) {
-        return (<p className='text-danger'>Too high</p>)
-    } else {
-        return (<p className='text-danger'>Too low</p>)
-    }
 }
 
 export default PetMedicalHistoryList;
