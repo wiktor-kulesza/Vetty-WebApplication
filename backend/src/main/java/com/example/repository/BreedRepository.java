@@ -11,4 +11,5 @@ public interface BreedRepository extends JpaRepository<Breed, Integer> {
     Boolean existsByName(String breedName);
 
     Optional<Breed> findByName(String name);
+
 }
