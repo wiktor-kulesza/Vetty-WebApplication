@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.constants.PetConstants;
 import com.example.dto.PetDto;
 import com.example.entity.Sex;
+import com.example.entity.medicalhistory.MedicalHistory;
 import com.example.entity.pet.Cat;
 import com.example.entity.pet.Dog;
 import com.example.entity.pet.Pet;
@@ -53,8 +54,8 @@ public class PetController {
     }
 
     @CrossOrigin
-    @GetMapping(path = "/user/{email}")
-    public ResponseEntity<List<PetDto>> getAllPetsByUserId(@PathVariable String email) throws PetToDtoConvertionException {
+    @GetMapping(path = "/user")
+    public ResponseEntity<List<PetDto>> getAllPetsByUserEmail(@RequestParam String email) throws PetToDtoConvertionException {
         List<Pet> pets = petService.getAllPetsByUserEmail(email);
         List<PetDto> petsDto = new ArrayList<>();
         for (Pet pet : pets) {
@@ -65,11 +66,49 @@ public class PetController {
     }
 
     @CrossOrigin
+    @GetMapping(path = "/user/public")
+    public ResponseEntity<List<PetDto>> getPetWithPublicMedicalHistoriesByUserEmail(@RequestParam String email) throws PetToDtoConvertionException {
+        List<Pet> pets = petService.getAllPetsByUserEmail(email);
+        List<PetDto> petsDto = new ArrayList<>();
+        for (Pet pet : pets) {
+            PetDto petDto = convertToDto(pet);
+            removePrivateMedicalHistories(petDto);
+            petsDto.add(petDto);
+        }
+        return ResponseEntity.ok(petsDto);
+    }
+
+    @CrossOrigin
     @GetMapping(path = "/{id}")
     public ResponseEntity<PetDto> getPetById(@PathVariable Integer id) throws PetToDtoConvertionException {
         Pet pet = petService.getPetById(id).orElse(null);
+        if (pet == null) {
+            return ResponseEntity.notFound().build();
+        }
         PetDto petDto = convertToDto(pet);
         return ResponseEntity.ok(petDto);
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "/public/{id}")
+    public ResponseEntity<PetDto> getPetWithPublicMedicalHistoriesById(@PathVariable Integer id) throws PetToDtoConvertionException {
+        Pet pet = petService.getPetById(id).orElse(null);
+        if (pet == null) {
+            return ResponseEntity.notFound().build();
+        }
+        PetDto petDto = convertToDto(pet);
+        removePrivateMedicalHistories(petDto);
+        return ResponseEntity.ok(petDto);
+    }
+
+    private void removePrivateMedicalHistories(PetDto petDto) {
+        List<MedicalHistory> publicMedicalHistories = new ArrayList<>();
+        petDto.getMedicalHistories().forEach(medicalHistoryDto -> {
+            if (medicalHistoryDto.getIsPublic()) {
+                publicMedicalHistories.add(medicalHistoryDto);
+            }
+        });
+        petDto.setMedicalHistories(publicMedicalHistories);
     }
 
     @CrossOrigin
