@@ -1,28 +1,39 @@
 import {Fragment, useEffect, useState} from "react";
 import * as con from './constants';
 import Image from "./assets/default-pet-image.jpg";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import useFetch from "./proccess_data/use_fetch";
 import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 
-const PetList = () => {
+const PetList = (passedEmail) => {
     const [pets, setPets] = useState([]);
-    const [email, setEmail] = useState(localStorage.getItem('userEmail'));
+    const [email, setEmail] = useState(passedEmail.passedEmail);
+    const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail'));
+    const [isYourProfile, setIsYourProfile] = useState(email === userEmail);
+
+    const [petsUrl, setPetsUrl] = useState(isYourProfile ? con.URL + con.API_GET_PETS_BY_USER_EMAIL + email : con.URL + con.API_GET_PETS_WITH_PUBLIC_MED_HIS_BY_USER_EMAIL + "?" + email);
+
+    console.log("passedEmail", email)
+    console.log("userEmail", userEmail)
+
+    useEffect(() => {
+        setIsYourProfile(userEmail === email);
+        setPetsUrl(isYourProfile ? con.URL + con.API_GET_PETS_BY_USER_EMAIL + email : con.URL + con.API_GET_PETS_WITH_PUBLIC_MED_HIS_BY_USER_EMAIL + email);
+    }, [userEmail, email, isYourProfile]);
+
+    useEffect(() => {
+        setUserEmail(localStorage.getItem('userEmail'));
+    }, []);
 
     const {
         data,
         error,
         isPending
-    } = useFetch(con.URL + con.API_GET_PETS_BY_USER_EMAIL + localStorage.getItem('userEmail'));
+    } = useFetch(petsUrl);
 
     useEffect(() => {
-        console.log("pets", data)
         setPets(data);
     }, [data]);
-
-    useEffect(() => {
-        setEmail(localStorage.getItem('userEmail'));
-    }, [email]);
 
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete the pet?")) {
@@ -58,6 +69,7 @@ const PetList = () => {
     }
 
     const renderPetList = () => {
+        console.log("pets", pets)
         if (isPending) {
             return <div>Loading...</div>;
         }
@@ -67,46 +79,53 @@ const PetList = () => {
         }
 
         if (!data || !data.length) {
+            return (
+                <div>
+                    No pets found.
+                    {isYourProfile &&
+                    <div className="pet-add">
 
-            return <div>No pets found.
-                <div className="pet-add">
-                    <Link to={'/add/pet'}>
-                        <button>
-                            <img className="pet-add-image" src={require("./assets/add-pet-image.png")}
-                                 alt="Add a new pet"/>
-                        </button>
-                    </Link>
-                    <p> Add pet</p>
-                </div>
-            </div>;
+                        <Col xs={12} sm={12} md={6} lg={4} className="">
+                            <Card className="add-pet-card">
+                                <Card.Link className="card-link" href="/add/pet">
+                                    <Card.Img
+                                        variant="top"
+                                        src={require("./assets/add-pet-image.png")}/>
+                                    <Card.Body>
+                                        <Card.Title> Add new pet</Card.Title>
+                                    </Card.Body>
+                                </Card.Link>
+                            </Card>
+                        </Col>
+                    </div>
+                    }
+                </div>);
         }
         return (
-            <Container>
+            <Container className="myXD">
                 <Row xs={12} sm={12} md={6} lg={6} className="g-4">
-                    {pets &&
-                    pets.map(pet => (
+                    {pets && pets.map(pet => (
                             <Fragment key={pet.id}>
-                                {/* {console.log(pet)} */}
-                                <Pet pet={pet} handleDelete={handleDelete} getPetImage={getPetImage}/>
+                                <Pet pet={pet} handleDelete={handleDelete} getPetImage={getPetImage}
+                                     isYourProfile={isYourProfile}/>
                             </Fragment>
                         )
                     )}
-                    <Col xs={12} sm={12} md={6} lg={4}>
-                        <Card bg='secondary'>
+                    {isYourProfile &&
+                    <Col xs={12} sm={12} md={6} lg={4} className="">
+                        <Card className="add-pet-card">
                             <Card.Link className="card-link" href="/add/pet">
                                 <Card.Img
-                                    src={require("./assets/add-pet-image.png")}
-                                    alt="Example Image"
-                                    style={{opacity: 0.7}}/>
-
+                                    variant="top"
+                                    src={require("./assets/add-pet-image.png")}/>
                                 <Card.Body>
-                                    <Card.Title>Add new pet</Card.Title>
-
+                                    <Card.Title> Add new pet</Card.Title>
                                 </Card.Body>
                             </Card.Link>
                         </Card>
-                    </Col>
+                    </Col>}
                 </Row>
+
             </Container>
 
         );
@@ -121,13 +140,13 @@ const PetList = () => {
     );
 }
 
-const Pet = ({pet, handleDelete, getPetImage}) => {
+const Pet = ({pet, handleDelete, getPetImage, isYourProfile}) => {
     const navigate = useNavigate();
     const age = Math.floor((Date.now() - new Date(pet.dateOfBirth)) / 31557600000);
     const petId = pet.id;
 
     const onView = (petId) => {
-        navigate(con.PET + petId);
+        navigate(con.PET + petId, {state: {petData: pet}});
     }
 
     const onEdit = (petId) => {
@@ -151,8 +170,10 @@ const Pet = ({pet, handleDelete, getPetImage}) => {
                     </Card.Text>
                     <div style={{maxWidth: '100%'}}>
                         <Button variant="primary" size='sm' onClick={() => onView(petId)}>View</Button>
-                        <Button variant="warning" size='sm' onClick={() => onEdit(petId)}>Edit</Button>
-                        <Button variant="danger" size='sm' onClick={() => onDelete(petId)}>Delete</Button>
+                        {isYourProfile &&
+                        <Button variant="warning" size='sm' onClick={() => onEdit(petId)}>Edit</Button>}
+                        {isYourProfile &&
+                        <Button variant="danger" size='sm' onClick={() => onDelete(petId)}>Delete</Button>}
                     </div>
                 </Card.Body>
             </Card>

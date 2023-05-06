@@ -3,7 +3,7 @@ import PetList from "./petList";
 const Home = () => {
     return (
         <div className="home">
-            <PetList/>
+            <PetList passedEmail={localStorage.getItem('userEmail')}/>
         </div>
     );
 }
