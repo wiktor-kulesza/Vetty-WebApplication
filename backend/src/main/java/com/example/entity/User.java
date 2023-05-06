@@ -21,6 +21,12 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String surname;
+
     @JsonIgnore
     @Column(nullable = false)
     private String password;
