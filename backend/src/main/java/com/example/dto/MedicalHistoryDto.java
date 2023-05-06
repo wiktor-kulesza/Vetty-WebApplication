@@ -21,6 +21,8 @@ public class MedicalHistoryDto {
 
     private String diagnosis;
 
+    private Boolean isPublic;
+
     private Integer petId;
 
     private List<BloodFactor> bloodResults;

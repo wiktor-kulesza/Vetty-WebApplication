@@ -37,6 +37,9 @@ public class MedicalHistory {
 
     private String diagnosis;
 
+    @Column(nullable = false)
+    private Boolean isPublic = true;
+
     @OneToMany(mappedBy = "medicalHistory", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "medical-history-result")
     private List<Result> results;

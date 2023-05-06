@@ -64,6 +64,7 @@ public class MedicalHistoryController {
                 .date(medicalHistoryDto.getDate())
                 .description(medicalHistoryDto.getDescription())
                 .diagnosis(medicalHistoryDto.getDiagnosis())
+                .isPublic(medicalHistoryDto.getIsPublic())
                 .build();
         if (medicalHistoryDto.getBloodResults() != null && !medicalHistoryDto.getBloodResults().isEmpty()) {
             if (medicalHistory.getResults() == null) {
