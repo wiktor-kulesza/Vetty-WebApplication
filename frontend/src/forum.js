@@ -59,6 +59,7 @@ function ForumView() {
 
     const handleThreadAdded = (newThread) => {
         setThreads([...threads, newThread]);
+        setShowAddThread(false);
     };
 
     return (
@@ -81,9 +82,11 @@ function ForumView() {
 
                 </div>
             </Row>
-            {showAddThread && <AddThreadForm authorEmail={localStorage.getItem('userEmail')} pets={pets}
-                                             onThreadAdded={handleThreadAdded}/>}
-            {showSearchCriteria && (
+            <div className="mb-3">
+                {showAddThread && <AddThreadForm authorEmail={localStorage.getItem('userEmail')} pets={pets}
+                                                 onThreadAdded={handleThreadAdded}/>}
+            </div>
+            <div className="mb-3">{showSearchCriteria && (
                 <Form onSubmit={handleSearchSubmit}>
                     <Dropdown className="mb-3">
                         <Dropdown.Toggle variant="secondary" id="species-dropdown">
@@ -151,9 +154,10 @@ function ForumView() {
                     <Button className='float-end' type="submit" variant="primary">Search</Button>
                 </Form>
             )}
-            {threads && (
-                <ThreadList threads={threads}/>
-            )}
+                {threads && (
+                    <ThreadList threads={threads}/>
+                )}</div>
+
         </Container>);
 }
 
