@@ -8,10 +8,15 @@ export const API_GET_ALL_PETS_IMAGES = "/api/images/all"
 export const API_GET_ALL_BREEDS = "/api/breeds/all"
 export const API_GET_IMAGE_BY_ID = "/api/images/"
 export const API_GET_PET_BY_ID = "/api/pets/"
-export const API_GET_PETS_BY_USER_EMAIL = "/api/pets/user/"
+export const API_GET_PETS_BY_USER_EMAIL = "/api/pets/user?email="
+export const API_GET_PETS_WITH_PUBLIC_MED_HIS_BY_USER_EMAIL = "/api/pets/user/public?email="
 export const API_GET_RESULTS_FROM_IMAGE = "/api/result"
 export const API_GET_MEDICAL_HISTORIES_BY_USER_EMAIL = "/api/medical-history/user"
 export const API_GET_ALL_THREADS = "/api/threads/all"
+export const API_GET_THREAD_BY_ID = "/api/threads/"
+export const API_GET_USER_BY_EMAIL = "/api/users?email="
+
+export const API_CHECK_IF_USER_EXISTS = "/api/users/exists"
 
 export const API_ADD_PET = "/api/pets"
 export const API_ADD_IMAGE = "/api/images"
@@ -52,6 +57,8 @@ export const ADD_MEDICAL_HISTORY = '/add/medical-history/'
 export const PET = '/pet/'
 export const MEDICAL_HISTORY = '/medical-history/'
 export const THREAD = '/thread/'
+export const SEARCH_PROFILE = '/profile/'
 
 // assets
 export const DEFAULT_PET_IMAGE = './assets/default-pet-image.jpg'
+export const DEFAULT_USER_IMAGE = './assets/default-user-image.jpg'
