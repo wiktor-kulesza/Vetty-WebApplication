@@ -1,18 +1,63 @@
-import {useForm} from 'react-hook-form';
 import * as constants from '../constants';
 import {useEffect, useState} from 'react';
 import useFetch from '../proccess_data/use_fetch';
 import {useNavigate} from 'react-router-dom';
-import ValidateImage from '../data_validation/validateImage';
+import {Button, Form} from 'react-bootstrap';
 
 const AddPetForm = () => {
     const navigate = useNavigate();
     const [token, setToken] = useState(localStorage.getItem('token'));
-    const [sex, setSex] = useState('MALE');
+    const [selectedSex, setSelectedSex] = useState('MALE');
+    const [selectedSpecies, setSelectedSpecies] = useState('');
+    const [selectedBreed, setSelectedBreed] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [selectedName, setSelectedName] = useState('');
+    const [selectedBirthDate, setSelectedBirthDate] = useState('');
+
+    const handleSpeciesChange = (event) => {
+        console.log("Species change", event.target.value)
+        setSelectedSpecies(event.target.value);
+    };
+
+    const handleBreedChange = (event) => {
+        console.log("Breed change", event.target.value)
+        setSelectedBreed(event.target.value);
+    };
+
+    const handleNameChange = (event) => {
+        console.log("Name change", event.target.value)
+        setSelectedName(event.target.value);
+    };
+
+    const handleBirthDateChange = (event) => {
+        console.log("Birth date change", event.target.value)
+        setSelectedBirthDate(event.target.value);
+    };
+
 
     const handleSexChange = (event) => {
-        setSex(event.target.value);
+        console.log("Sex change", event.target.value)
+        setSelectedSex(event.target.value);
     };
+
+    const handleFileValidation = (event) => {
+        const file = event.target.files[0];
+
+        if (!file) {
+            setErrorMessage('Please select a file.');
+            setSelectedImage(null);
+        } else if (!file.type.includes('image')) {
+            setErrorMessage('Please select a PNG or JPG image.');
+            setSelectedImage(null);
+        } else if (file.size > 3000000) {
+            setErrorMessage('Please select a file less than 3MB in size.');
+            setSelectedImage(null);
+        } else {
+            setErrorMessage('');
+            setSelectedImage(file);
+        }
+    }
 
     useEffect(() => {
         const tokenFromLocalStorage = localStorage.getItem('token');
@@ -22,49 +67,46 @@ const AddPetForm = () => {
     }, [token]);
 
     const {data: breeds} = useFetch(constants.URL + constants.API_GET_ALL_BREEDS);
-    const {
-        register,
-        handleSubmit,
-        formState: {errors},
-    } = useForm();
 
-    const postPet = (imageId, data) => {
-        fetch(constants.URL + constants.API_ADD_PET, {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                species: data.species,
-                name: data.name,
-                sex: sex,
-                breedName: data.breedName,
-                birthDate: data.birthDate,
-                ownerEmail: localStorage.getItem('userEmail'),
-                imageId: imageId
+    const postPet = (imageId) => {
+        console.log("post pet")
+        console.log("image id", imageId)
+        try {
+            fetch(constants.URL + constants.API_ADD_PET, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    species: selectedSpecies,
+                    name: selectedName,
+                    sex: selectedSex,
+                    breedName: selectedBreed,
+                    birthDate: selectedBirthDate,
+                    ownerEmail: localStorage.getItem('userEmail'),
+                    imageId: imageId
+                })
             })
-        })
-            .then(response => {
-                console.log(response);
-                navigate(constants.HOME);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+                .then(response => {
+                    navigate('/');
+                })
+        } catch (error) {
+            console.log(error);
+        }
     };
 
-    const onSubmit = (data) => {
-        console.log(data.image)
+    const onSubmit = (event) => {
+        event.preventDefault();
+        console.log("Submit")
         if (window.confirm("Are you sure you want to add pet?")) {
-            if (data.image[0] && data.image[0] !== undefined) {
-                const dataImage = data.image[0];
-                const blob = new Blob([dataImage], {type: dataImage.type});
-                console.log("BLOB")
-                console.log(blob);
+            if (selectedImage) {
+                console.log("image", selectedImage)
+                const blob = new Blob([selectedImage], {type: selectedImage.type});
+                console.log("BLOB", blob)
                 const formData = new FormData();
                 formData.append("image", blob);
-                console.log("imgage post")
+                console.log("image post")
                 console.log(token);
                 fetch(constants.URL + constants.API_ADD_IMAGE, {
                     headers: {
@@ -73,106 +115,80 @@ const AddPetForm = () => {
                     method: "POST",
                     body: formData,
                 })
-                    .then((response) => response.json())
-                    .then((imageId) => {
-                        postPet(imageId, data);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                    .then(response => response.json())
+                    .then(imageId => postPet(imageId))
             } else {
-                postPet(null, data);
+                postPet();
             }
         }
 
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='form-div'>
-                <label htmlFor="species">Species:</label>
-                <label>
-                    <select {...register('species', {required: true})}>
-                        <option value="">Select a species</option>
-                        <option value="Dog">Dog</option>
-                        <option value="Cat">Cat</option>
-                    </select>
-                    {errors.breed && <span> <br/> This field is required</span>}
-                </label>
-            </div>
-            <div className='form-div'>
-                <label>
-                    <input
-                        type="radio"
-                        name="sex"
-                        value="MALE"
-                        checked={sex === 'MALE'}
-                        onChange={handleSexChange}
-                    />
-                    Male
-                </label>
-                <label>
-                    <input
-                        type="radio"
-                        name="sex"
-                        value="FEMALE"
-                        checked={sex === 'FEMALE'}
-                        onChange={handleSexChange}
-                    />
-                    Female
-                </label>
-            </div>
-            <div className='form-div'>
-                <label htmlFor="name">Name:</label>
-                <input
+        <Form onSubmit={onSubmit}>
+            <Form.Group className="mb-3" controlId='species'>
+                <Form.Control as="select" value={selectedSpecies ? selectedSpecies : ''} onChange={handleSpeciesChange}
+                              required>
+                    <option value="">Select a species</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                </Form.Control>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="sex">
+                <Form.Check
+                    type="radio"
+                    label="Male"
+                    name="sex"
+                    value="MALE"
+                    checked={selectedSex === 'MALE'}
+                    onChange={handleSexChange}
+                />
+                <Form.Check
+                    type="radio"
+                    label="Female"
+                    name="sex"
+                    value="FEMALE"
+                    checked={selectedSex === 'FEMALE'}
+                    onChange={handleSexChange}
+                />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="title">
+                <Form.Control
                     type="text"
-                    name="name"
-                    id="name"
+                    placeholder="Pet name"
                     maxLength="16"
+                    value={selectedName}
                     pattern="[A-Za-z]+"
-                    {...register('name', {required: true})}
-                />
-                {errors.name && <span>This field is required</span>}
-            </div>
-            <div>
-                <label>
-                    Breed:
-                    <select {...register('breedName', {required: true})}>
-                        <option value="">Select a breed</option>
-                        {breeds && breeds.map((breed) => (
-                            <option key={breed.id} value={breed.name}>{breed.name}</option>
+                    onChange={handleNameChange}/>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId='breed'>
+                <Form.Control as="select" value={selectedBreed ? selectedBreed : ''} onChange={handleBreedChange}
+                              required>
+                    <option value="">Select a breed</option>
+                    {breeds && breeds.filter(
+                        (breed) => breed.type.toLowerCase() === selectedSpecies.toLowerCase()).sort((a, b) => a.name.localeCompare(b.name))
+                        .map((breed) => (
+                            <option key={breed.id} value={breed.name}>
+                                {breed.name.toLowerCase()}</option>
                         ))}
-                    </select>
-                    {errors.breed && <span> <br/> This field is required</span>}
-                </label>
-            </div>
-            <div>
-                <label htmlFor="image">Image:</label>
-                <input
+                </Form.Control>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="birthDate">
+                <input id="birthDate" className="form-control" type="date" max={new Date().toISOString().split('T')[0]}
+                       onChange={handleBirthDateChange}/>
+            </Form.Group>
+            <Form.Group controlId="image">
+                <Form.Label>Image:</Form.Label>
+                <Form.Control
                     type="file"
-                    name="image"
-                    id="image"
-                    accept="image/*"
-                    {...register('image', {
-                        validate: ValidateImage,
-                    })}
+                    accept="image/png, image/jpeg"
+                    onChange={(event) => handleFileValidation(event)}
                 />
-                {errors.image?.types?.maxSize && <p>Image is too big (maximum size is 10MB)</p>}
-                {errors.image?.types?.fileType && <p>Image must be a JPEG, PNG file</p>}
-            </div>
-            <div>
-                <label htmlFor="birthDate">Birth Date:</label>
-                <input
-                    type="date"
-                    name="birthDate"
-                    id="birthDate"
-                    max={new Date().toISOString().split('T')[0]}
-                    {...register('birthDate', {required: true})}
-                />
-                {errors.birthDate && <span>This field is required</span>}
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+                {errorMessage}
+            </Form.Group>
+
+            <Button className='float-end' variant="primary" type="submit">Add</Button>
+        </Form>
     );
 };
 
