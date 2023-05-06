@@ -44,14 +44,14 @@ const AddThreadForm = ({authorEmail, pets, onThreadAdded}) => {
         setSelectedMedicalHistory(selectedMedialHistoryId);
     };
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
         console.log("selectedMedicalHistory", selectedMedicalHistory);
         // JSONify the form dat
 
         try {
             // Send a POST request with the form data to URL2 using async/await
-            fetch(constants.URL + constants.API_ADD_THREAD, {
+            const response = await fetch(constants.URL + constants.API_ADD_THREAD, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -63,21 +63,13 @@ const AddThreadForm = ({authorEmail, pets, onThreadAdded}) => {
                     medicalHistoryId: selectedMedicalHistory,
                     authorEmail: authorEmail
                 })
-            }).then(response => {
-                response.json()
             })
-                .then(data => {
-                    if (data && !data.error) {
-                        const newThread = data
-                        console.log("newThread", newThread);
-                        onThreadAdded(newThread);
-                    }
-
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-
+            const data = await response.json();
+            if (data) {
+                const newThread = data
+                console.log("newThread", newThread);
+                onThreadAdded(newThread);
+            }
         } catch (error) {
             console.error('Failed to submit form:', error);
         }
@@ -112,7 +104,7 @@ const AddThreadForm = ({authorEmail, pets, onThreadAdded}) => {
                     <Form.Control as="select" value={selectedMedicalHistory} onChange={handleMedicalHistorySelect}
                                   required>
                         <option value="">-- Select Medical History --</option>
-                        {selectedPet.medicalHistories.map((history, index) => (
+                        {selectedPet.medicalHistories.filter(medHist => medHist.isPublic).map((history, index) => (
                             <option key={index} value={history.id}>
                                 {history.diagnosis} - {history.date}
                             </option>
