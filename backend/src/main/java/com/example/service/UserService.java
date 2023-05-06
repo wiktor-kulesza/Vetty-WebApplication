@@ -57,4 +57,12 @@ public class UserService {
     public Optional<User> getUserByEmail(String ownerEmail) {
         return userRepository.findByEmail(ownerEmail);
     }
+
+    public boolean exists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public Object getUser(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

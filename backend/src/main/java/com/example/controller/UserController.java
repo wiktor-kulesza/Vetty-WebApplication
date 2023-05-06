@@ -5,6 +5,7 @@ import com.example.entity.User;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,17 @@ public class UserController {
     public String delete(@RequestParam String email) {
         userService.delete(email);
         return email;
+    }
+
+    @PostMapping("/exists")
+    @CrossOrigin
+    public ResponseEntity<Boolean> exists(@RequestParam String email) {
+        return ResponseEntity.ok(userService.exists(email));
+    }
+
+    @GetMapping()
+    @CrossOrigin
+    public ResponseEntity<UserDto> getUser(@RequestParam String email) {
+        return ResponseEntity.ok(modelMapper.map(userService.getUser(email), UserDto.class));
     }
 }
