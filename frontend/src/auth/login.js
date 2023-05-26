@@ -4,7 +4,6 @@ import axios from 'axios';
 import jwt from 'jwt-decode'
 // import bcrypt from "bcryptjs-react";
 import * as constants from '../constants';
-import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, Form} from 'react-bootstrap';
 
 

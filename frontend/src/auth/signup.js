@@ -3,7 +3,6 @@ import {Link, useNavigate} from 'react-router-dom';
 import * as constants from '../constants';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import "bootstrap/dist/css/bootstrap.min.css";
 import {Button, Form} from 'react-bootstrap';
 
 
@@ -35,6 +34,7 @@ const Signup = () => {
             const decoded = jwt_decode(token);
             localStorage.setItem('token', token);
             localStorage.setItem('userId', decoded.userId);
+            localStorage.setItem('userEmail', decoded.sub);
             navigate('/');
         } catch (error) {
             console.error(error);
