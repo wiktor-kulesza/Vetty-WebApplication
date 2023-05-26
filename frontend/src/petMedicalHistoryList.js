@@ -4,7 +4,7 @@ import * as constants from './constants';
 import {Button, Collapse, Table} from "react-bootstrap";
 import PetMedicalHistoryResults from "./petMedicalHistoryResults";
 
-const PetMedicalHistoryList = ({medicalHistories, petId}) => {
+const PetMedicalHistoryList = ({medicalHistories, petId, isYourProfile}) => {
     const [data, setData] = useState(medicalHistories);
     const [resultsShown, setResultsShown] = useState([]);
 
@@ -104,13 +104,16 @@ const PetMedicalHistoryList = ({medicalHistories, petId}) => {
                                 </Fragment>
                             ))
                         }
+                        {isYourProfile &&
                         <tr>
                             <td colSpan={5}>
                                 <Button className="ms-auto" variant="primary" size="sm" as={Link}
                                         to={constants.ADD_MEDICAL_HISTORY + petId}> Add Medical History </Button>
                             </td>
                         </tr>
+                        }
                         </tbody>
+
                     </Table>
                 </div>
             )
