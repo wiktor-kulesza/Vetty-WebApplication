@@ -5,9 +5,7 @@ import ModifyPetForm from "./forms/modifyPetForm";
 
 const ModifyPet = () => {
     const {petId} = useParams();
-    console.log(petId)
     const {error, isPending, data: pet} = useFetch("http://localhost:8080/api/pets/" + petId);
-    console.log(pet)
 
     return (
         <div>
