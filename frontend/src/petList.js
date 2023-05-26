@@ -1,7 +1,8 @@
 import {Fragment, useEffect, useState} from "react";
 import * as con from './constants';
+import moment from 'moment';
 import Image from "./assets/default-pet-image.jpg";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import useFetch from "./proccess_data/use_fetch";
 import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 
@@ -12,9 +13,6 @@ const PetList = (passedEmail) => {
     const [isYourProfile, setIsYourProfile] = useState(email === userEmail);
 
     const [petsUrl, setPetsUrl] = useState(isYourProfile ? con.URL + con.API_GET_PETS_BY_USER_EMAIL + email : con.URL + con.API_GET_PETS_WITH_PUBLIC_MED_HIS_BY_USER_EMAIL + "?" + email);
-
-    console.log("passedEmail", email)
-    console.log("userEmail", userEmail)
 
     useEffect(() => {
         setIsYourProfile(userEmail === email);
@@ -69,7 +67,6 @@ const PetList = (passedEmail) => {
     }
 
     const renderPetList = () => {
-        console.log("pets", pets)
         if (isPending) {
             return <div>Loading...</div>;
         }
@@ -80,29 +77,28 @@ const PetList = (passedEmail) => {
 
         if (!data || !data.length) {
             return (
-                <div>
+                <Container className="border" align='center'>
                     No pets found.
                     {isYourProfile &&
-                    <div className="pet-add">
-
+                    <Container>
                         <Col xs={12} sm={12} md={6} lg={4} className="">
                             <Card className="add-pet-card">
                                 <Card.Link className="card-link" href="/add/pet">
                                     <Card.Img
                                         variant="top"
-                                        src={require("./assets/add-pet-image.png")}/>
+                                        src={require("./assets/default-user-image.jpg")}/>
                                     <Card.Body>
                                         <Card.Title> Add new pet</Card.Title>
                                     </Card.Body>
                                 </Card.Link>
                             </Card>
                         </Col>
-                    </div>
+                    </Container>
                     }
-                </div>);
+                </Container>);
         }
         return (
-            <Container className="myXD">
+            <Container>
                 <Row xs={12} sm={12} md={6} lg={6} className="g-4">
                     {pets && pets.map(pet => (
                             <Fragment key={pet.id}>
@@ -112,16 +108,15 @@ const PetList = (passedEmail) => {
                         )
                     )}
                     {isYourProfile &&
-                    <Col xs={12} sm={12} md={6} lg={4} className="">
+                    <Col xs={12} sm={6} md={4} lg={4}>
                         <Card className="add-pet-card">
-                            <Card.Link className="card-link" href="/add/pet">
-                                <Card.Img
-                                    variant="top"
-                                    src={require("./assets/add-pet-image.png")}/>
-                                <Card.Body>
-                                    <Card.Title> Add new pet</Card.Title>
-                                </Card.Body>
-                            </Card.Link>
+                            <Card.Img
+                                variant="top"
+                                src={require("./assets/default-user-image.jpg")}/>
+                            <Card.Body>
+                                <Card.Title> Add new pet</Card.Title>
+                                <Link to={con.ADD_PET} className="stretched-link"/>
+                            </Card.Body>
                         </Card>
                     </Col>}
                 </Row>
@@ -133,8 +128,6 @@ const PetList = (passedEmail) => {
 
     return (
         <div>
-            <h2>Pet List</h2>
-
             {renderPetList()}
         </div>
     );
@@ -142,7 +135,9 @@ const PetList = (passedEmail) => {
 
 const Pet = ({pet, handleDelete, getPetImage, isYourProfile}) => {
     const navigate = useNavigate();
-    const age = Math.floor((Date.now() - new Date(pet.dateOfBirth)) / 31557600000);
+    const currentDate = moment();
+    const yearAge = currentDate.diff(pet.birthDate, 'years');
+    const monthAge = currentDate.diff(pet.birthDate, 'months');
     const petId = pet.id;
 
     const onView = (petId) => {
@@ -158,14 +153,14 @@ const Pet = ({pet, handleDelete, getPetImage, isYourProfile}) => {
     }
 
     return (
-        <Col key={pet.id} xs={12} sm={12} md={6} lg={4}>
+        <Col key={pet.id} xs={12} sm={6} md={4} lg={4}>
             <Card>
                 <Card.Img variant="top" src={pet.imageId ? `data:image/jpeg;base64,${getPetImage(pet.id)}` : Image}/>
                 <Card.Body>
                     <Card.Title>{pet.name}</Card.Title>
                     <Card.Text>
                         {pet.breed && <p>Breed: {pet.breed}</p>}
-                        {age && <p>Age: {age} years</p>}
+                        {<p>Age: {yearAge > 0 ? yearAge : monthAge} {yearAge > 0 ? "years" : "months"}</p>}
                         {pet.name && <p>Name: {pet.name}</p>}
                     </Card.Text>
                     <div style={{maxWidth: '100%'}}>
