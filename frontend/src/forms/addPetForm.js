@@ -11,33 +11,29 @@ const AddPetForm = () => {
     const [selectedSpecies, setSelectedSpecies] = useState('');
     const [selectedBreed, setSelectedBreed] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImageName, setSelectedImageName] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
     const [selectedName, setSelectedName] = useState('');
     const [selectedBirthDate, setSelectedBirthDate] = useState('');
 
     const handleSpeciesChange = (event) => {
-        console.log("Species change", event.target.value)
         setSelectedSpecies(event.target.value);
     };
 
     const handleBreedChange = (event) => {
-        console.log("Breed change", event.target.value)
         setSelectedBreed(event.target.value);
     };
 
     const handleNameChange = (event) => {
-        console.log("Name change", event.target.value)
         setSelectedName(event.target.value);
     };
 
     const handleBirthDateChange = (event) => {
-        console.log("Birth date change", event.target.value)
         setSelectedBirthDate(event.target.value);
     };
 
 
     const handleSexChange = (event) => {
-        console.log("Sex change", event.target.value)
         setSelectedSex(event.target.value);
     };
 
@@ -56,6 +52,7 @@ const AddPetForm = () => {
         } else {
             setErrorMessage('');
             setSelectedImage(file);
+            setSelectedImageName(file.name);
         }
     }
 
@@ -67,7 +64,6 @@ const AddPetForm = () => {
     }, [token]);
 
     const {data: breeds} = useFetch(constants.URL + constants.API_GET_ALL_BREEDS);
-
     const postPet = (imageId) => {
         console.log("post pet")
         console.log("image id", imageId)
@@ -102,11 +98,13 @@ const AddPetForm = () => {
         if (window.confirm("Are you sure you want to add pet?")) {
             if (selectedImage) {
                 console.log("image", selectedImage)
-                const blob = new Blob([selectedImage], {type: selectedImage.type});
-                console.log("BLOB", blob)
+                console.log("image name", selectedImage.name)
+                const blob = new Blob([selectedImage], {type: selectedImage.type, name: selectedImageName});
+                const file = new File([blob], selectedImageName, {type: blob.type})
                 const formData = new FormData();
-                formData.append("image", blob);
+                formData.append("image", file);
                 console.log("image post")
+                console.log("FORM DATA", formData)
                 console.log(token);
                 fetch(constants.URL + constants.API_ADD_IMAGE, {
                     headers: {
@@ -127,6 +125,7 @@ const AddPetForm = () => {
     return (
         <Form onSubmit={onSubmit}>
             <Form.Group className="mb-3" controlId='species'>
+                <Form.Label>Species</Form.Label>
                 <Form.Control as="select" value={selectedSpecies ? selectedSpecies : ''} onChange={handleSpeciesChange}
                               required>
                     <option value="">Select a species</option>
@@ -135,6 +134,7 @@ const AddPetForm = () => {
                 </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3" controlId="sex">
+                <Form.Label> Sex </Form.Label>
                 <Form.Check
                     type="radio"
                     label="Male"
@@ -152,7 +152,8 @@ const AddPetForm = () => {
                     onChange={handleSexChange}
                 />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="title">
+            <Form.Group className="mb-3" controlId="name">
+                <Form.Label>Name</Form.Label>
                 <Form.Control
                     type="text"
                     placeholder="Pet name"
@@ -162,6 +163,7 @@ const AddPetForm = () => {
                     onChange={handleNameChange}/>
             </Form.Group>
             <Form.Group className="mb-3" controlId='breed'>
+                <Form.Label>Breed</Form.Label>
                 <Form.Control as="select" value={selectedBreed ? selectedBreed : ''} onChange={handleBreedChange}
                               required>
                     <option value="">Select a breed</option>
@@ -174,11 +176,12 @@ const AddPetForm = () => {
                 </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3" controlId="birthDate">
+                <Form.Label>Birth date</Form.Label>
                 <input id="birthDate" className="form-control" type="date" max={new Date().toISOString().split('T')[0]}
                        onChange={handleBirthDateChange}/>
             </Form.Group>
             <Form.Group controlId="image">
-                <Form.Label>Image:</Form.Label>
+                <Form.Label>Image</Form.Label>
                 <Form.Control
                     type="file"
                     accept="image/png, image/jpeg"
@@ -187,7 +190,7 @@ const AddPetForm = () => {
                 {errorMessage}
             </Form.Group>
 
-            <Button className='float-end' variant="primary" type="submit">Add</Button>
+            <Button variant="primary" type="submit">Add</Button>
         </Form>
     );
 };

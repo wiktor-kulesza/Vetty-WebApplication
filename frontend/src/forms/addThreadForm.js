@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {Button, Form} from 'react-bootstrap';
+import {Button, Container, Form} from 'react-bootstrap';
 import * as constants from '../constants';
 
 const AddThreadForm = ({authorEmail, pets, onThreadAdded}) => {
@@ -76,45 +76,48 @@ const AddThreadForm = ({authorEmail, pets, onThreadAdded}) => {
     };
 
     return (
-        <Form onSubmit={handleFormSubmit}>
-            <Form.Group controlId="title">
-                <Form.Label>Title</Form.Label>
-                <Form.Control type="text" placeholder="Enter title" value={title} onChange={handleTitleChange}/>
-            </Form.Group>
+        <Container className="border p-3 mb-4">
+            <Form onSubmit={handleFormSubmit}>
+                <Form.Label> Add thread </Form.Label>
+                <Form.Group controlId="title">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control type="text" placeholder="Enter title" value={title} onChange={handleTitleChange}/>
+                </Form.Group>
 
-            <Form.Group controlId="content">
-                <Form.Label>Content</Form.Label>
-                <Form.Control as="textarea" rows={3} placeholder="Enter content" value={content}
-                              onChange={handleContentChange}/>
-            </Form.Group>
-            <Form.Group controlId='pet'>
-                <Form.Label>Select a Pet</Form.Label>
-                <Form.Control as="select" value={selectedPet ? selectedPet.id : ''} onChange={handlePetSelect} required>
-                    <option value="">-- Select Pet --</option>
-                    {pets && pets.map((pet, index) => (
-                        <option key={index} value={pet.id}>
-                            {pet.name}
-                        </option>
-                    ))}
-                </Form.Control>
-            </Form.Group>
-            {selectedPet && (
-                <Form.Group controlId='medicalHistory'>
-                    <Form.Label>Select Medical History</Form.Label>
-                    <Form.Control as="select" value={selectedMedicalHistory} onChange={handleMedicalHistorySelect}
+                <Form.Group controlId="content">
+                    <Form.Label>Content</Form.Label>
+                    <Form.Control as="textarea" rows={3} placeholder="Enter content" value={content}
+                                  onChange={handleContentChange}/>
+                </Form.Group>
+                <Form.Group controlId='pet'>
+                    <Form.Label>Select a Pet</Form.Label>
+                    <Form.Control as="select" value={selectedPet ? selectedPet.id : ''} onChange={handlePetSelect}
                                   required>
-                        <option value="">-- Select Medical History --</option>
-                        {selectedPet.medicalHistories.filter(medHist => medHist.isPublic).map((history, index) => (
-                            <option key={index} value={history.id}>
-                                {history.diagnosis} - {history.date}
+                        <option value="">-- Select Pet --</option>
+                        {pets && pets.map((pet, index) => (
+                            <option key={index} value={pet.id}>
+                                {pet.name}
                             </option>
                         ))}
                     </Form.Control>
                 </Form.Group>
-            )}
-            <Button className='float-end' variant="primary" type="submit">Add</Button>
-        </Form>
-
+                {selectedPet && (
+                    <Form.Group controlId='medicalHistory'>
+                        <Form.Label>Select Medical History</Form.Label>
+                        <Form.Control as="select" value={selectedMedicalHistory} onChange={handleMedicalHistorySelect}
+                                      required>
+                            <option value="">-- Select Medical History --</option>
+                            {selectedPet.medicalHistories.filter(medHist => medHist.isPublic).map((history, index) => (
+                                <option key={index} value={history.id}>
+                                    {history.diagnosis} - {history.date}
+                                </option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                )}
+                <Button variant="primary" type="submit">Add</Button>
+            </Form>
+        </Container>
     );
 };
 

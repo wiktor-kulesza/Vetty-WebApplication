@@ -4,7 +4,6 @@ import {useNavigate} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Col, Row} from 'react-bootstrap';
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
     const navigate = useNavigate();
@@ -29,9 +28,6 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
     }, [factors, setFactors]);
 
     const changeFactorValue = (value, factorName) => {
-        console.log("CHAGNE FACTOR VALUE");
-        console.log("value", value);
-        console.log("factorName", factorName);
         factors.map(factor => {
             if (factor.name === factorName) {
                 factor.value = Number(value);
@@ -44,12 +40,7 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
 
     const onMedicalHistorySubmit = (event) => {
         event.preventDefault();
-        console.log('diag', diagnosis);
-        console.log('desc', description);
-        console.log('date', date);
-        console.log("factors", factors);
         const factorArray = [];
-        console.log("object entries", Object.entries(factors));
 
         for (const [index, factor] of Object.entries(factors)) {
             console.log(index, factor);
@@ -57,8 +48,6 @@ const AddMedicalHistoryForm = ({petId, data: factors, setData: setFactors}) => {
                 factorArray.push({bloodFactorType: factor.name, value: factor.value})
             }
         }
-        console.log("factor Array", factorArray);
-        console.log("petId", petId);
         fetch(constants.URL + constants.API_ADD_MEDICAL_HISTORY, {
             method: 'POST',
             headers: {

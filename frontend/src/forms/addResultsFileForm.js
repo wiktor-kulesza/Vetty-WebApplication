@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import * as constants from "../constants";
 import Form from 'react-bootstrap/Form';
 import {Button} from 'react-bootstrap';
-import "bootstrap/dist/css/bootstrap.min.css";
 
 
 const AddResultsFileForm = ({data, setData}) => {
@@ -38,7 +37,6 @@ const AddResultsFileForm = ({data, setData}) => {
             const dataFile = results;
             const formDataUpload = new FormData();
             formDataUpload.append("results", dataFile);
-            console.log(token);
             fetch(constants.URL + constants.API_GET_RESULTS_FROM_IMAGE, {
                 headers: {
                     Authorization: `Bearer ${token}`,
