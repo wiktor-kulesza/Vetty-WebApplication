@@ -13,18 +13,27 @@ export const API_GET_PETS_WITH_PUBLIC_MED_HIS_BY_USER_EMAIL = "/api/pets/user/pu
 export const API_GET_RESULTS_FROM_IMAGE = "/api/result"
 export const API_GET_MEDICAL_HISTORIES_BY_USER_EMAIL = "/api/medical-history/user"
 export const API_GET_ALL_THREADS = "/api/threads/all"
+export const API_GET_ALL_THREADS_BY_PET_ID = "/api/threads/pet/"
+export const API_GET_ALL_TAGS = "/api/tags/all"
 export const API_GET_THREAD_BY_ID = "/api/threads/"
 export const API_GET_USER_BY_EMAIL = "/api/users?email="
+export const API_GET_PET_STATISTICS_BY_ID = "/api/statistics/pet/"
 
 export const API_CHECK_IF_USER_EXISTS = "/api/users/exists"
+export const API_SEARCH_THREADS = "/api/threads/search"
+
+export const API_LIKE_THREAD = "/api/threads/like"
+export const API_LIKE_COMMENT = "/api/comments/like"
 
 export const API_ADD_PET = "/api/pets"
 export const API_ADD_IMAGE = "/api/images"
 export const API_ADD_MEDICAL_HISTORY = "/api/medical-history"
 export const API_ADD_THREAD = "/api/threads"
+export const API_ADD_COMMENT = "/api/threads/comment"
 
 export const API_DELETE_PET_BY_ID = "/api/pets/"
 export const API_DELETE_MEDICAL_HISTORY_BY_ID = "/api/medical-history/"
+export const API_DELETE_COMMENT = "/api/threads/comment"
 
 export const API_MODIFY_PET_BY_ID = "/api/pets/"
 
