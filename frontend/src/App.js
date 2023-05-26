@@ -1,3 +1,4 @@
+import './styles/style.css';
 import Home from './home';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import ModifyPet from './modifyPet';

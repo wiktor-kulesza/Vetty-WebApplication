@@ -86,7 +86,10 @@ const CustomNavbar = () => {
                                     onChange={handleSearchChange}/>
                     </Col>
                     <Col>
-                      <Button variant="outline-success" size="sm" type="submit">Search</Button>
+                      <Button variant="dark "
+                              size="sm"
+                              type="submit"
+                              style={{maxHeight: '100%'}}>Search</Button>
                     </Col>
                   </Row>
 

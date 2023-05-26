@@ -10,16 +10,12 @@
 /* NAVBAR */
 
 .navbar {
+    background-image: url("./assets/default-user-image.jpg");
+    background-repeat: repeat-y;
     padding: 20px;
-    display: flex;
-    align-items: center;
-    max-width: 1000px;
+    max-width: 100%;
     margin: 0 auto;
     border-bottom: 1px solid #f2f2f2;
-}
-
-.navbar h1 {
-    color: #368F8B;
 }
 
 .navbar .links {
@@ -33,12 +29,14 @@
 }
 
 .navbar a:hover {
-    color: #368F8B;
+    color: #297373;
 }
 
 .content {
-    max-width: 1000px;
-    margin: 40px auto;
+    max-width: 80%;
+    margin: auto;
+    align-items: center;
+    align-content: center;
     padding: 20px;
 }
 
@@ -51,14 +49,6 @@ img {
 
 /* PET ADD */
 
-.pet-add {
-    height: 80%;
-    padding: 5px 16px;
-    margin: 20px 0;
-    border-bottom: 1px solid #fafafa;
-    text-align: center;
-    transition: 0.1s;
-}
 
 .pet-add:hover {
     box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
@@ -205,4 +195,15 @@ img {
 .scrollable-container {
     max-height: 100px; /* adjust to your preference */
     overflow-y: auto;
+}
+
+/* Thread preview */
+.thread-preview:hover {
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+    cursor: pointer; /* add this line to change the cursor */
+}
+
+.thread-preview:hover, .thread-preview:hover .thread-preview-text {
+    cursor: pointer; /* add this line to change the cursor of the child elements */
 }
