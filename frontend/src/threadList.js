@@ -1,17 +1,20 @@
 import {Col, Container, ListGroup, Row} from "react-bootstrap"
 import ThreadPreview from "./threadPreview"
+import {useEffect, useState} from "react";
 
-const ThreadList = (threads) => {
+const ThreadList = (params) => {
+    const [threadsToShow, setThreadsToShow] = useState(params.threads);
 
-    console.log("threads", threads)
-    console.log("thread type", typeof threads.threads)
-
+    useEffect(() => {
+        setThreadsToShow(params.threads);
+    }, [params]);
+    console.log("threads", threadsToShow);
     return (
         <Container>
             <Row>
                 <Col>
                     <ListGroup>
-                        {threads.threads.map((thread) => (
+                        {threadsToShow && threadsToShow.map((thread) => (
                             <ListGroup.Item key={thread.id}>
                                 <ThreadPreview thread={thread}/>
                             </ListGroup.Item>
