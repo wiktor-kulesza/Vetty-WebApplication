@@ -1,6 +1,6 @@
-package com.example.dto;
+package com.wkulesza.dto;
 
-import com.example.entity.medicalhistory.BloodFactor;
+import com.wkulesza.entity.medicalhistory.BloodFactor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
