@@ -1,4 +1,4 @@
-package com.example.constants;
+package com.wkulesza.constants;
 
 public class TagConstants {
     public final static String HYPOTHYROIDISM = "hypothyroidism";
