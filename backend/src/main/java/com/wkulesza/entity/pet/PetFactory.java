@@ -1,4 +1,4 @@
-package com.example.entity.pet;
+package com.wkulesza.entity.pet;
 
 public interface PetFactory {
     Pet createPet(String species);

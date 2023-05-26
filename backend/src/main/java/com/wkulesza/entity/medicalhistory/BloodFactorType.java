@@ -1,4 +1,4 @@
-package com.example.entity.medicalhistory;
+package com.wkulesza.entity.medicalhistory;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

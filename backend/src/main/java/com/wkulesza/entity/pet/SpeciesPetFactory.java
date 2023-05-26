@@ -1,4 +1,4 @@
-package com.example.entity.pet;
+package com.wkulesza.entity.pet;
 
 // Concrete factory class that implements the PetFactory interface
 public class SpeciesPetFactory implements PetFactory {

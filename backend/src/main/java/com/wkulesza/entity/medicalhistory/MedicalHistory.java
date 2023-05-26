@@ -1,10 +1,10 @@
-package com.example.entity.medicalhistory;
+package com.wkulesza.entity.medicalhistory;
 
-import com.example.entity.Thread;
-import com.example.entity.pet.Pet;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.wkulesza.entity.Thread;
+import com.wkulesza.entity.pet.Pet;
 import lombok.*;
 
 import javax.persistence.*;

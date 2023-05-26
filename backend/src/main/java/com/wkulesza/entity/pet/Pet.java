@@ -1,12 +1,12 @@
-package com.example.entity.pet;
+package com.wkulesza.entity.pet;
 
-import com.example.entity.Breed;
-import com.example.entity.Image;
-import com.example.entity.Sex;
-import com.example.entity.User;
-import com.example.entity.medicalhistory.MedicalHistory;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.wkulesza.entity.Breed;
+import com.wkulesza.entity.Image;
+import com.wkulesza.entity.Sex;
+import com.wkulesza.entity.User;
+import com.wkulesza.entity.medicalhistory.MedicalHistory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -34,8 +34,8 @@ public abstract class Pet {
     @Column(nullable = false)
     private String name;
 
-    //TODO: add sex
     @Enumerated(EnumType.STRING)
+    @Column(length = 10)
     private Sex sex;
 
     private Date birthDate;
