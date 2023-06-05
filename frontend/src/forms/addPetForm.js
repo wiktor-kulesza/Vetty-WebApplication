@@ -1,6 +1,6 @@
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 import {useEffect, useState} from 'react';
-import useFetch from '../proccess_data/use_fetch';
+import useFetch from '../services/use_fetch';
 import {useNavigate} from 'react-router-dom';
 import {Button, Form} from 'react-bootstrap';
 

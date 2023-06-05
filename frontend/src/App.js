@@ -1,20 +1,20 @@
 import './styles/style.css';
-import Home from './home';
+import Home from './components/home';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import ModifyPet from './modifyPet';
-import AddPet from './addPet';
-import Pet from './pet';
+import ModifyPet from './components/modifyPet';
+import AddPet from './components/addPet';
+import Pet from './components/pet';
 import Login from './auth/login';
-import RouteGuard from './route_guard';
+import RouteGuard from './auth/route_guard';
 import Signup from './auth/signup';
 import LogoutIfJwtExpired from './auth/logout';
 import Verify from './auth/verify';
-import AddMedicalHistory from './addMedicalHistory';
-import CustomNavbar from './customNavbar';
-import ForumView from './forum';
-import * as con from './constants';
-import Thread from './thread';
-import ProfileView from './profile';
+import AddMedicalHistory from './components/addMedicalHistory';
+import CustomNavbar from './components/customNavbar';
+import ForumView from './components/forum';
+import * as con from './constants/constants';
+import Thread from './components/thread';
+import ProfileView from './components/profile';
 
 function App() {
 

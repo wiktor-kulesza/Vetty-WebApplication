@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import jwt from 'jwt-decode'
 // import bcrypt from "bcryptjs-react";
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 import {Button, Form} from 'react-bootstrap';
 
 

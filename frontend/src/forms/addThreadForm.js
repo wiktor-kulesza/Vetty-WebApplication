@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Button, Container, Form} from 'react-bootstrap';
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 
 const AddThreadForm = ({authorEmail, pets, onThreadAdded}) => {
     const [token, setToken] = useState(localStorage.getItem('token'));

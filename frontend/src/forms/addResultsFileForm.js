@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import * as constants from "../constants";
+import * as constants from "../constants/constants";
 import Form from 'react-bootstrap/Form';
 import {Button} from 'react-bootstrap';
 

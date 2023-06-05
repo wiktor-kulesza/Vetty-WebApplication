@@ -1,4 +1,4 @@
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Button from 'react-bootstrap/Button';

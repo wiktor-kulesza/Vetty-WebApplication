@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DefaultImage from "../assets/default-pet-image.jpg";
 import {useNavigate} from "react-router-dom";
-import useFetch from '../proccess_data/use_fetch';
-import * as constants from "../constants";
+import useFetch from '../services/use_fetch';
+import * as constants from "../constants/constants";
 import {Button, Form, Image, Row} from "react-bootstrap";
 
 const ModifyPetForm = ({pet}) => {
@@ -10,7 +10,7 @@ const ModifyPetForm = ({pet}) => {
     console.log("pet: ", pet);
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [selectedSex, setSelectedSex] = useState(pet.sex);
-    const [selectedSpecies, setSelectedSpecies] = useState(pet.species);
+    const [selectedSpecies] = useState(pet.species);
     const [selectedBreed, setSelectedBreed] = useState(pet.breedName);
     const [orginalImage, setOriginalImage] = useState(pet.image);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -18,6 +18,11 @@ const ModifyPetForm = ({pet}) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [selectedName, setSelectedName] = useState(pet.name);
     const [selectedBirthDate, setSelectedBirthDate] = useState(pet.birthDate);
+
+    useEffect(() => {
+        const tokenFromLocalStorage = localStorage.getItem('token');
+        setToken(tokenFromLocalStorage);
+    }, []);
 
     function getFileFormat(fileName) {
         const regex = /\.[^\.]+$/; // Match the last period and any non-period characters after it
@@ -36,7 +41,7 @@ const ModifyPetForm = ({pet}) => {
 
     }
 
-    const [fileFormat, setFileFormat] = useState((pet && pet.image && pet.image.name) ? getFileFormat(pet.image.name) : "jpg");
+    const [fileFormat] = useState((pet && pet.image && pet.image.name) ? getFileFormat(pet.image.name) : "jpg");
 
     const {error, isPending, data: breeds} = useFetch("http://localhost:8080/api/breeds/all");
 
@@ -47,9 +52,7 @@ const ModifyPetForm = ({pet}) => {
     const handleNameChange = (event) => {
         setSelectedName(event.target.value);
     };
-    const handleSpeciesChange = (event) => {
-        setSelectedSpecies(event.target.value);
-    };
+
     const handleBreedChange = (event) => {
         setSelectedBreed(event.target.value);
     };
@@ -187,12 +190,16 @@ const ModifyPetForm = ({pet}) => {
                            onChange={handleBirthDateChange}/>
                 </Form.Group>
                 <Form.Group controlId="image">
+
                     <Form.Label>Image</Form.Label>
                     <Row className="mb-3">
-                        <Image className="pet-image"
-                               fluid={false}
-                               src={getImageSource()}
-                               alt={pet.name}/>
+                        <div style={{width: '250px', height: '250px'}}>
+                            <Image className="pet-image"
+                                   fluid={true}
+                                   src={getImageSource()}
+                                   style={{objectFit: 'cover', width: '100%', height: '100%'}}
+                                   alt={pet.name}/></div>
+
                     </Row>
                     <Row>
                         <Form.Control

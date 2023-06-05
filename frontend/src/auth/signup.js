@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import * as constants from '../constants';
+import * as constants from '../constants/constants';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {Button, Form} from 'react-bootstrap';
