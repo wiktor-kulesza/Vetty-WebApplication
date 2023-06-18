@@ -12,6 +12,5 @@ public class ThreadToThreadDtoMap extends PropertyMap<Thread, ThreadDto> {
         map().setAuthorEmail(source.getAuthor().getEmail());
         map().setTitle(source.getTitle());
         map().setContent(source.getContent());
-        //TODO: finish
     }
 }

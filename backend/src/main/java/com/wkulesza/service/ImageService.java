@@ -23,8 +23,7 @@ public class ImageService {
         Image image = new Image();
         image.setName(file.getOriginalFilename());
         image.setImage(file.getBytes());
-        imageRepository.save(image);
-        return image.getId();
+        return imageRepository.save(image).getId();
     }
 
     public List<Image> getAllImages() {

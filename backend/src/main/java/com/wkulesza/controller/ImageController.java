@@ -27,7 +27,6 @@ public class ImageController {
     @CrossOrigin
     @PostMapping
     public ResponseEntity<Integer> addImage(@RequestParam("image") MultipartFile file) throws IOException {
-        //TODO: add compression
         return ResponseEntity.ok(imageService.addImage(file));
     }
 
@@ -35,13 +34,11 @@ public class ImageController {
     @GetMapping(path = "/all")
     public ResponseEntity<List<ImageDto>> getImageById() {
         List<Image> images = imageService.getAllImages();
-
         return ResponseEntity.ok(convertToDto(images));
     }
 
     @CrossOrigin
     @GetMapping(path = "/{id}")
-    //TODO: add decompression
     public ResponseEntity<ImageDto> getImageById(@PathVariable Integer id) {
         Image image = imageService.getImageById(id);
         return ResponseEntity.ok(convertImageToDto(image));

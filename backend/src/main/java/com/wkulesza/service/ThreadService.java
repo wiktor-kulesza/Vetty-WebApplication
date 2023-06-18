@@ -34,7 +34,7 @@ public class ThreadService {
     private final TagRepository tagRepository;
 
     public List<Thread> getAllThreads() {
-        return threadRepository.findAll();
+        return threadRepository.findAllByOrderByMedicalHistoryDateDesc();
     }
 
     public Thread addThread(Thread thread) {

@@ -36,6 +36,5 @@ public class Thread {
     @Column(name = "title", nullable = false, length = 40)
     private String title;
 
-
     private String content;
 }

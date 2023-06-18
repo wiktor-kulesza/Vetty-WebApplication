@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface ThreadRepository extends JpaRepository<Thread, Integer> {
 
+    List<Thread> findAllByOrderByMedicalHistoryDateDesc();
+
     List<Thread> findAllByMedicalHistoryPetId(Integer petId);
 
     @Query("SELECT DISTINCT t FROM Thread t " +
